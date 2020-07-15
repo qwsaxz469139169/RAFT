@@ -340,7 +340,7 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
 
         //  响应客户端(成功一半)
         if (success.get() >= count) {
-
+            long latency = System.currentTimeMillis() - logEntry.getStartTime();
             boolean reqCommit = ReqCommit(logEntry);
 
             if(reqCommit==true){
@@ -351,7 +351,7 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
                 lastApplied = commitIndex;
 
                 LOGGER.info("success apply local state machine,  logEntry info : {}", logEntry);
-                long latency = System.currentTimeMillis() - logEntry.getStartTime();
+
 
                 long followerLatency = 0;
 
