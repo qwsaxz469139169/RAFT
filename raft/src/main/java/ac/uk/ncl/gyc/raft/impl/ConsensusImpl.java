@@ -105,6 +105,7 @@ public class ConsensusImpl implements Consensus {
                 return result;
             }
 
+            long startTime =  System.currentTimeMillis();
             result.setTerm(node.getCurrentTerm());
             // 不够格
             if (param.getTerm() < node.getCurrentTerm()) {
@@ -126,20 +127,16 @@ public class ConsensusImpl implements Consensus {
             node.setCurrentTerm(param.getTerm());
 
             //心跳
-            if (param.getEntries() == null || param.getEntries().length == 0) {
+            if (param.getEntries() == null || param.getEntries().size() == 0) {
 //                LOGGER.info("node {} append heartbeat success , Leader's term : {}, my term : {}",
 //                    param.getLeaderId(), param.getTerm(), node.getCurrentTerm());
                 return LogTaskResponse.newBuilder().term(node.getCurrentTerm()).success(true).build();
             }
 
-            String message = param.getEntries()[0].getMessage();
-            if(node.received.get(message)==null){
-                node.received.put(message,1L);
-                node.startTime.put(message,System.currentTimeMillis());
-            }
+
             // 真实日志
             // 第一次
-            if (node.getLogModule().getLastIndex() != 0 && param.getPrevLogIndex() != 0) {
+/*            if (node.getLogModule().getLastIndex() != 0 && param.getPrevLogIndex() != 0) {
                 LogEntry logEntry;
 
                 if ((logEntry = node.getLogModule().read(param.getPrevLogIndex())) != null) {
@@ -165,14 +162,26 @@ public class ConsensusImpl implements Consensus {
                 // 已经有日志了, 不能重复写入.
                 result.setSuccess(true);
                 return result;
-            }
+            }*/
+
 
             // 写进日志并且应用到状态机
             for (LogEntry entry : param.getEntries()) {
+
+                if(entry.isFirstIndex()){
+                    String message = entry.getMessage();
+                    if(node.received.get(message)==null){
+                        node.received.put(message,1L);
+                        node.startTime.put(message,startTime);
+                    }
+                }
+
                 node.getLogModule().write(entry);
                 node.stateMachine.apply(entry);
-                result.setSuccess(true);
-            }
+
+        }
+
+            result.setSuccess(true);
 
             //如果 leaderCommit > commitIndex，令 commitIndex 等于 leaderCommit 和 新日志条目索引值中较小的一个
             if (param.getLeaderCommit() > node.getCommitIndex()) {
@@ -195,6 +204,9 @@ public class ConsensusImpl implements Consensus {
     public CommitResponse requestCommit(CommitRequest request) {
 
             String key = request.getMessage();
+            for(LogEntry logEntry :request.getLogEntries()){
+                System.out.println("The Message: "+logEntry.getMessage()+ "has been committed");
+            }
             System.out.println("The Message: "+key+ "has been committed");
 
             CommitResponse response = new CommitResponse();

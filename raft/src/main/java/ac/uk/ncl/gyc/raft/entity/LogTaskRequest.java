@@ -1,6 +1,7 @@
 package ac.uk.ncl.gyc.raft.entity;
 
 import java.util.Arrays;
+import java.util.List;
 
 public class LogTaskRequest extends BaseRequest {
 
@@ -14,7 +15,7 @@ public class LogTaskRequest extends BaseRequest {
     long preLogTerm;
 
     /** 准备存储的日志条目（表示心跳时为空；一次性发送多个是为了提高效率） */
-    LogEntry[] entries;
+    List<LogEntry> entries;
 
     /** 领导人已经提交的日志的索引值  */
     long leaderCommit;
@@ -56,11 +57,11 @@ public class LogTaskRequest extends BaseRequest {
         this.preLogTerm = preLogTerm;
     }
 
-    public LogEntry[] getEntries() {
+    public List<LogEntry> getEntries() {
         return entries;
     }
 
-    public void setEntries(LogEntry[] entries) {
+    public void setEntries(List<LogEntry> entries) {
         this.entries = entries;
     }
 
@@ -78,7 +79,7 @@ public class LogTaskRequest extends BaseRequest {
             "leaderId='" + leaderId + '\'' +
             ", prevLogIndex=" + prevLogIndex +
             ", preLogTerm=" + preLogTerm +
-            ", entries=" + Arrays.toString(entries) +
+            ", entries=" +entries +
             ", leaderCommit=" + leaderCommit +
             ", term=" + term +
             ", serverId='" + serverId + '\'' +
@@ -97,7 +98,7 @@ public class LogTaskRequest extends BaseRequest {
         private String leaderId;
         private long prevLogIndex;
         private long preLogTerm;
-        private LogEntry[] entries;
+        private List<LogEntry> entries;
         private long leaderCommit;
 
         private Builder() {
@@ -128,7 +129,7 @@ public class LogTaskRequest extends BaseRequest {
             return this;
         }
 
-        public Builder entries(LogEntry[] val) {
+        public Builder entries( List<LogEntry> val) {
             entries = val;
             return this;
         }

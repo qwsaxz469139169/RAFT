@@ -1,12 +1,11 @@
 package ac.uk.ncl.gyc.raft;
 
 import ac.uk.ncl.gyc.raft.common.NodesConfigration;
-import ac.uk.ncl.gyc.raft.entity.ElectionTaskRequest;
-import ac.uk.ncl.gyc.raft.entity.LogTaskRequest;
-import ac.uk.ncl.gyc.raft.entity.LogTaskResponse;
-import ac.uk.ncl.gyc.raft.entity.ElectionTaskResponse;
+import ac.uk.ncl.gyc.raft.entity.*;
 import ac.uk.ncl.gyc.raft.client.ClientResponse;
 import ac.uk.ncl.gyc.raft.client.ClientRequest;
+
+import java.util.List;
 
 /**
  *
@@ -40,10 +39,10 @@ public interface Node<T> extends LifeCycle{
     /**
      * 处理客户端请求.
      *
-     * @param request
+     * @param messages
      * @return
      */
-    ClientResponse handlerClientRequest(ClientRequest request);
+    boolean handlerClientRequest( List<LogEntry> messages);
 
     /**
      * 转发给 leader 节点.

@@ -19,7 +19,17 @@ public class LogEntry implements Serializable, Comparable {
 
     private long startTime;
 
+    private boolean firstIndex;
+
     public LogEntry() {
+    }
+
+    public boolean isFirstIndex() {
+        return firstIndex;
+    }
+
+    public void setFirstIndex(boolean firstIndex) {
+        this.firstIndex = firstIndex;
     }
 
     public String getMessage() {
@@ -70,6 +80,7 @@ public class LogEntry implements Serializable, Comparable {
     public void setTerm(long term) {
         this.term = term;
     }
+
 
     public Command getCommand() {
         return command;

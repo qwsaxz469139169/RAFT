@@ -27,7 +27,7 @@ public class ClusterMembershipChangesImpl implements ClusterMembershipChanges {
     @Override
     public synchronized Result addNode(PeerNode newNode) {
         // 已经存在
-        if (node.nodes.getPeersWithOutSelf().contains(newNode)) {
+/*        if (node.nodes.getPeersWithOutSelf().contains(newNode)) {
             return new Result();
         }
 
@@ -61,7 +61,7 @@ public class ClusterMembershipChangesImpl implements ClusterMembershipChanges {
                 }
             }
 
-        }
+        }*/
 
         return new Result();
     }

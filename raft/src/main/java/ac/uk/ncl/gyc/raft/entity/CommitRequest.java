@@ -1,5 +1,7 @@
 package ac.uk.ncl.gyc.raft.entity;
 
+import java.util.List;
+
 /**
  * Created by GYC on 2020/6/27.
  */
@@ -7,14 +9,14 @@ public class CommitRequest extends BaseRequest{
 
     String message;
 
-    LogEntry logEntry;
+    List<LogEntry> logEntries;
 
-    public LogEntry getLogEntry() {
-        return logEntry;
+    public List<LogEntry> getLogEntries() {
+        return logEntries;
     }
 
-    public void setLogEntry(LogEntry logEntry) {
-        this.logEntry = logEntry;
+    public void setLogEntries(List<LogEntry> logEntry) {
+        this.logEntries = logEntries;
     }
 
     public String getMessage() {
