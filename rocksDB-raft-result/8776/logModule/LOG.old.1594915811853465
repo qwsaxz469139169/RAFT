@@ -1,0 +1,187 @@
+2020/07/16-16:16:21.266173 5dc RocksDB version: 5.14.3
+2020/07/16-16:16:21.266297 5dc Git sha rocksdb_build_git_sha:@626550343f861ab19d4fdcb74fde728a6c043e6a@
+2020/07/16-16:16:21.266370 5dc Compile date Oct  9 2018
+2020/07/16-16:16:21.266432 5dc DB SUMMARY
+2020/07/16-16:16:21.267433 5dc CURRENT file:  CURRENT
+2020/07/16-16:16:21.267515 5dc IDENTITY file:  IDENTITY
+2020/07/16-16:16:21.268183 5dc MANIFEST file:  MANIFEST-000065 size: 59 Bytes
+2020/07/16-16:16:21.268260 5dc SST files in ./rocksDB-raft-result/8776/logModule dir, Total Num: 0, files: 
+2020/07/16-16:16:21.268325 5dc Write Ahead Log file in ./rocksDB-raft-result/8776/logModule: 000066.log size: 0 ; 
+2020/07/16-16:16:21.268488 5dc                         Options.error_if_exists: 0
+2020/07/16-16:16:21.268722 5dc                       Options.create_if_missing: 1
+2020/07/16-16:16:21.268762 5dc                         Options.paranoid_checks: 1
+2020/07/16-16:16:21.268795 5dc                                     Options.env: 000000000113E760
+2020/07/16-16:16:21.268826 5dc                                Options.info_log: 000000001B67F500
+2020/07/16-16:16:21.268861 5dc                Options.max_file_opening_threads: 16
+2020/07/16-16:16:21.268893 5dc                              Options.statistics: 0000000000000000
+2020/07/16-16:16:21.268925 5dc                               Options.use_fsync: 0
+2020/07/16-16:16:21.268961 5dc                       Options.max_log_file_size: 0
+2020/07/16-16:16:21.269001 5dc                  Options.max_manifest_file_size: 18446744073709551615
+2020/07/16-16:16:21.269031 5dc                   Options.log_file_time_to_roll: 0
+2020/07/16-16:16:21.269062 5dc                       Options.keep_log_file_num: 1000
+2020/07/16-16:16:21.269089 5dc                    Options.recycle_log_file_num: 0
+2020/07/16-16:16:21.269116 5dc                         Options.allow_fallocate: 1
+2020/07/16-16:16:21.269147 5dc                        Options.allow_mmap_reads: 0
+2020/07/16-16:16:21.269179 5dc                       Options.allow_mmap_writes: 0
+2020/07/16-16:16:21.269210 5dc                        Options.use_direct_reads: 0
+2020/07/16-16:16:21.269242 5dc                        Options.use_direct_io_for_flush_and_compaction: 0
+2020/07/16-16:16:21.269274 5dc          Options.create_missing_column_families: 0
+2020/07/16-16:16:21.269304 5dc                              Options.db_log_dir: 
+2020/07/16-16:16:21.269336 5dc                                 Options.wal_dir: ./rocksDB-raft-result/8776/logModule
+2020/07/16-16:16:21.269364 5dc                Options.table_cache_numshardbits: 6
+2020/07/16-16:16:21.269395 5dc                      Options.max_subcompactions: 1
+2020/07/16-16:16:21.269426 5dc                  Options.max_background_flushes: -1
+2020/07/16-16:16:21.269454 5dc                         Options.WAL_ttl_seconds: 0
+2020/07/16-16:16:21.269484 5dc                       Options.WAL_size_limit_MB: 0
+2020/07/16-16:16:21.269515 5dc             Options.manifest_preallocation_size: 4194304
+2020/07/16-16:16:21.269547 5dc                     Options.is_fd_close_on_exec: 1
+2020/07/16-16:16:21.269574 5dc                   Options.advise_random_on_open: 1
+2020/07/16-16:16:21.269605 5dc                    Options.db_write_buffer_size: 0
+2020/07/16-16:16:21.269636 5dc                    Options.write_buffer_manager: 000000001B6A7500
+2020/07/16-16:16:21.269667 5dc         Options.access_hint_on_compaction_start: 1
+2020/07/16-16:16:21.269697 5dc  Options.new_table_reader_for_compaction_inputs: 0
+2020/07/16-16:16:21.269723 5dc           Options.random_access_max_buffer_size: 1048576
+2020/07/16-16:16:21.269748 5dc                      Options.use_adaptive_mutex: 0
+2020/07/16-16:16:21.269775 5dc                            Options.rate_limiter: 0000000000000000
+2020/07/16-16:16:21.269802 5dc     Options.sst_file_manager.rate_bytes_per_sec: 0
+2020/07/16-16:16:21.269831 5dc                       Options.wal_recovery_mode: 2
+2020/07/16-16:16:21.269854 5dc                  Options.enable_thread_tracking: 0
+2020/07/16-16:16:21.269874 5dc                  Options.enable_pipelined_write: 0
+2020/07/16-16:16:21.269951 5dc         Options.allow_concurrent_memtable_write: 1
+2020/07/16-16:16:21.269974 5dc      Options.enable_write_thread_adaptive_yield: 1
+2020/07/16-16:16:21.269994 5dc             Options.write_thread_max_yield_usec: 100
+2020/07/16-16:16:21.270014 5dc            Options.write_thread_slow_yield_usec: 3
+2020/07/16-16:16:21.270034 5dc                               Options.row_cache: None
+2020/07/16-16:16:21.270053 5dc                              Options.wal_filter: None
+2020/07/16-16:16:21.270073 5dc             Options.avoid_flush_during_recovery: 0
+2020/07/16-16:16:21.270092 5dc             Options.allow_ingest_behind: 0
+2020/07/16-16:16:21.270112 5dc             Options.preserve_deletes: 0
+2020/07/16-16:16:21.270131 5dc             Options.two_write_queues: 0
+2020/07/16-16:16:21.270151 5dc             Options.manual_wal_flush: 0
+2020/07/16-16:16:21.270170 5dc             Options.max_background_jobs: 2
+2020/07/16-16:16:21.270189 5dc             Options.max_background_compactions: -1
+2020/07/16-16:16:21.270209 5dc             Options.avoid_flush_during_shutdown: 0
+2020/07/16-16:16:21.270229 5dc           Options.writable_file_max_buffer_size: 1048576
+2020/07/16-16:16:21.270248 5dc             Options.delayed_write_rate : 16777216
+2020/07/16-16:16:21.270268 5dc             Options.max_total_wal_size: 0
+2020/07/16-16:16:21.270287 5dc             Options.delete_obsolete_files_period_micros: 21600000000
+2020/07/16-16:16:21.270307 5dc                   Options.stats_dump_period_sec: 600
+2020/07/16-16:16:21.270327 5dc                          Options.max_open_files: -1
+2020/07/16-16:16:21.270346 5dc                          Options.bytes_per_sync: 0
+2020/07/16-16:16:21.270366 5dc                      Options.wal_bytes_per_sync: 0
+2020/07/16-16:16:21.270385 5dc       Options.compaction_readahead_size: 0
+2020/07/16-16:16:21.270405 5dc Compression algorithms supported:
+2020/07/16-16:16:21.270425 5dc 	kZSTD supported: 0
+2020/07/16-16:16:21.270444 5dc 	kSnappyCompression supported: 0
+2020/07/16-16:16:21.270464 5dc 	kBZip2Compression supported: 0
+2020/07/16-16:16:21.270483 5dc 	kZlibCompression supported: 0
+2020/07/16-16:16:21.270503 5dc 	kLZ4Compression supported: 0
+2020/07/16-16:16:21.270522 5dc 	kXpressCompression supported: 0
+2020/07/16-16:16:21.270541 5dc 	kLZ4HCCompression supported: 0
+2020/07/16-16:16:21.270560 5dc 	kZSTDNotFinalCompression supported: 0
+2020/07/16-16:16:21.270584 5dc Fast CRC32 supported: Supported on x86
+2020/07/16-16:16:21.273942 5dc [c:\users\aretter\code\rocksdb\db\version_set.cc:3085] Recovering from manifest file: MANIFEST-000065
+2020/07/16-16:16:21.274901 5dc [c:\users\aretter\code\rocksdb\db\column_family.cc:475] --------------- Options for column family [default]:
+2020/07/16-16:16:21.274930 5dc               Options.comparator: leveldb.BytewiseComparator
+2020/07/16-16:16:21.274950 5dc           Options.merge_operator: None
+2020/07/16-16:16:21.274970 5dc        Options.compaction_filter: None
+2020/07/16-16:16:21.274989 5dc        Options.compaction_filter_factory: None
+2020/07/16-16:16:21.275009 5dc         Options.memtable_factory: SkipListFactory
+2020/07/16-16:16:21.275028 5dc            Options.table_factory: BlockBasedTable
+2020/07/16-16:16:21.275080 5dc            table_factory options:   flush_block_policy_factory: FlushBlockBySizePolicyFactory (000000001B651E10)
+  cache_index_and_filter_blocks: 0
+  cache_index_and_filter_blocks_with_high_priority: 0
+  pin_l0_filter_and_index_blocks_in_cache: 0
+  index_type: 0
+  hash_index_allow_collision: 1
+  checksum: 1
+  no_block_cache: 0
+  block_cache: 000000000112E0C0
+  block_cache_name: LRUCache
+  block_cache_options:
+    capacity : 8388608
+    num_shard_bits : 4
+    strict_capacity_limit : 0
+    high_pri_pool_ratio: 0.000
+  block_cache_compressed: 0000000000000000
+  persistent_cache: 0000000000000000
+  block_size: 4096
+  block_size_deviation: 10
+  block_restart_interval: 16
+  index_block_restart_interval: 1
+  metadata_block_size: 4096
+  partition_filters: 0
+  use_delta_encoding: 1
+  filter_policy: nullptr
+  whole_key_filtering: 1
+  verify_compression: 0
+  read_amp_bytes_per_bit: 0
+  format_version: 2
+  enable_index_compression: 1
+  block_align: 0
+2020/07/16-16:16:21.275163 5dc        Options.write_buffer_size: 67108864
+2020/07/16-16:16:21.275186 5dc  Options.max_write_buffer_number: 2
+2020/07/16-16:16:21.275206 5dc          Options.compression: NoCompression
+2020/07/16-16:16:21.275226 5dc                  Options.bottommost_compression: Disabled
+2020/07/16-16:16:21.275247 5dc       Options.prefix_extractor: nullptr
+2020/07/16-16:16:21.275267 5dc   Options.memtable_insert_with_hint_prefix_extractor: nullptr
+2020/07/16-16:16:21.275293 5dc             Options.num_levels: 7
+2020/07/16-16:16:21.275319 5dc        Options.min_write_buffer_number_to_merge: 1
+2020/07/16-16:16:21.275345 5dc     Options.max_write_buffer_number_to_maintain: 0
+2020/07/16-16:16:21.275371 5dc            Options.compression_opts.window_bits: -14
+2020/07/16-16:16:21.275396 5dc                  Options.compression_opts.level: -1
+2020/07/16-16:16:21.275422 5dc               Options.compression_opts.strategy: 0
+2020/07/16-16:16:21.275448 5dc         Options.compression_opts.max_dict_bytes: 0
+2020/07/16-16:16:21.275474 5dc         Options.compression_opts.zstd_max_train_bytes: 0
+2020/07/16-16:16:21.275500 5dc      Options.level0_file_num_compaction_trigger: 4
+2020/07/16-16:16:21.275525 5dc          Options.level0_slowdown_writes_trigger: 20
+2020/07/16-16:16:21.275551 5dc              Options.level0_stop_writes_trigger: 36
+2020/07/16-16:16:21.275577 5dc                   Options.target_file_size_base: 67108864
+2020/07/16-16:16:21.275602 5dc             Options.target_file_size_multiplier: 1
+2020/07/16-16:16:21.275628 5dc                Options.max_bytes_for_level_base: 268435456
+2020/07/16-16:16:21.275655 5dc Options.level_compaction_dynamic_level_bytes: 0
+2020/07/16-16:16:21.275684 5dc          Options.max_bytes_for_level_multiplier: 10.000000
+2020/07/16-16:16:21.275715 5dc Options.max_bytes_for_level_multiplier_addtl[0]: 1
+2020/07/16-16:16:21.275746 5dc Options.max_bytes_for_level_multiplier_addtl[1]: 1
+2020/07/16-16:16:21.275777 5dc Options.max_bytes_for_level_multiplier_addtl[2]: 1
+2020/07/16-16:16:21.275807 5dc Options.max_bytes_for_level_multiplier_addtl[3]: 1
+2020/07/16-16:16:21.275837 5dc Options.max_bytes_for_level_multiplier_addtl[4]: 1
+2020/07/16-16:16:21.275867 5dc Options.max_bytes_for_level_multiplier_addtl[5]: 1
+2020/07/16-16:16:21.275898 5dc Options.max_bytes_for_level_multiplier_addtl[6]: 1
+2020/07/16-16:16:21.275928 5dc       Options.max_sequential_skip_in_iterations: 8
+2020/07/16-16:16:21.275958 5dc                    Options.max_compaction_bytes: 1677721600
+2020/07/16-16:16:21.275987 5dc                        Options.arena_block_size: 8388608
+2020/07/16-16:16:21.276017 5dc   Options.soft_pending_compaction_bytes_limit: 68719476736
+2020/07/16-16:16:21.276047 5dc   Options.hard_pending_compaction_bytes_limit: 274877906944
+2020/07/16-16:16:21.276077 5dc       Options.rate_limit_delay_max_milliseconds: 100
+2020/07/16-16:16:21.276107 5dc                Options.disable_auto_compactions: 0
+2020/07/16-16:16:21.276138 5dc                        Options.compaction_style: kCompactionStyleLevel
+2020/07/16-16:16:21.276169 5dc                          Options.compaction_pri: kByCompensatedSize
+2020/07/16-16:16:21.276199 5dc Options.compaction_options_universal.size_ratio: 1
+2020/07/16-16:16:21.276229 5dc Options.compaction_options_universal.min_merge_width: 2
+2020/07/16-16:16:21.276259 5dc Options.compaction_options_universal.max_merge_width: 4294967295
+2020/07/16-16:16:21.276290 5dc Options.compaction_options_universal.max_size_amplification_percent: 200
+2020/07/16-16:16:21.276319 5dc Options.compaction_options_universal.compression_size_percent: -1
+2020/07/16-16:16:21.276347 5dc Options.compaction_options_universal.stop_style: kCompactionStopStyleTotalSize
+2020/07/16-16:16:21.276374 5dc Options.compaction_options_fifo.max_table_files_size: 1073741824
+2020/07/16-16:16:21.276401 5dc Options.compaction_options_fifo.allow_compaction: 0
+2020/07/16-16:16:21.276432 5dc Options.compaction_options_fifo.ttl: 0
+2020/07/16-16:16:21.276521 5dc                   Options.table_properties_collectors: 
+2020/07/16-16:16:21.276554 5dc                   Options.inplace_update_support: 0
+2020/07/16-16:16:21.276584 5dc                 Options.inplace_update_num_locks: 10000
+2020/07/16-16:16:21.276614 5dc               Options.memtable_prefix_bloom_size_ratio: 0.000000
+2020/07/16-16:16:21.276645 5dc   Options.memtable_huge_page_size: 0
+2020/07/16-16:16:21.276675 5dc                           Options.bloom_locality: 0
+2020/07/16-16:16:21.276704 5dc                    Options.max_successive_merges: 0
+2020/07/16-16:16:21.276734 5dc                Options.optimize_filters_for_hits: 0
+2020/07/16-16:16:21.276764 5dc                Options.paranoid_file_checks: 0
+2020/07/16-16:16:21.276794 5dc                Options.force_consistency_checks: 0
+2020/07/16-16:16:21.276824 5dc                Options.report_bg_io_stats: 0
+2020/07/16-16:16:21.276854 5dc                               Options.ttl: 0
+2020/07/16-16:16:21.280218 5dc [c:\users\aretter\code\rocksdb\db\version_set.cc:3361] Recovered from manifest file:./rocksDB-raft-result/8776/logModule/MANIFEST-000065 succeeded,manifest_file_number is 65, next_file_number is 67, last_sequence is 0, log_number is 0,prev_log_number is 0,max_column_family is 0,min_log_number_to_keep is 0
+2020/07/16-16:16:21.280276 5dc [c:\users\aretter\code\rocksdb\db\version_set.cc:3369] Column family [default] (ID 0), log number is 64
+2020/07/16-16:16:21.280730 5dc EVENT_LOG_v1 {"time_micros": 1594912581280720, "job": 1, "event": "recovery_started", "log_files": [66]}
+2020/07/16-16:16:21.280760 5dc [c:\users\aretter\code\rocksdb\db\db_impl_open.cc:551] Recovering log #66 mode 2
+2020/07/16-16:16:21.281255 5dc [c:\users\aretter\code\rocksdb\db\version_set.cc:2847] Creating manifest 68
+2020/07/16-16:16:21.291151 5dc EVENT_LOG_v1 {"time_micros": 1594912581291136, "job": 1, "event": "recovery_finished"}
+2020/07/16-16:16:21.305413 5dc [c:\users\aretter\code\rocksdb\db\db_impl_open.cc:1219] DB pointer 000000001B6D2F40

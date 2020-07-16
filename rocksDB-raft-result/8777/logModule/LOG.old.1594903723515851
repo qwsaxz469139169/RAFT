@@ -1,0 +1,187 @@
+2020/07/16-13:47:17.291068 cbc RocksDB version: 5.14.3
+2020/07/16-13:47:17.291236 cbc Git sha rocksdb_build_git_sha:@626550343f861ab19d4fdcb74fde728a6c043e6a@
+2020/07/16-13:47:17.291329 cbc Compile date Oct  9 2018
+2020/07/16-13:47:17.291415 cbc DB SUMMARY
+2020/07/16-13:47:17.292082 cbc CURRENT file:  CURRENT
+2020/07/16-13:47:17.292191 cbc IDENTITY file:  IDENTITY
+2020/07/16-13:47:17.292826 cbc MANIFEST file:  MANIFEST-000001 size: 13 Bytes
+2020/07/16-13:47:17.293044 cbc SST files in ./rocksDB-raft-result/8777/logModule dir, Total Num: 0, files: 
+2020/07/16-13:47:17.293118 cbc Write Ahead Log file in ./rocksDB-raft-result/8777/logModule: 000003.log size: 0 ; 
+2020/07/16-13:47:17.293194 cbc                         Options.error_if_exists: 0
+2020/07/16-13:47:17.293407 cbc                       Options.create_if_missing: 1
+2020/07/16-13:47:17.293442 cbc                         Options.paranoid_checks: 1
+2020/07/16-13:47:17.293470 cbc                                     Options.env: 0000000001376530
+2020/07/16-13:47:17.293502 cbc                                Options.info_log: 000000001BA9E8D0
+2020/07/16-13:47:17.293531 cbc                Options.max_file_opening_threads: 16
+2020/07/16-13:47:17.293559 cbc                              Options.statistics: 0000000000000000
+2020/07/16-13:47:17.293588 cbc                               Options.use_fsync: 0
+2020/07/16-13:47:17.293617 cbc                       Options.max_log_file_size: 0
+2020/07/16-13:47:17.293646 cbc                  Options.max_manifest_file_size: 18446744073709551615
+2020/07/16-13:47:17.293675 cbc                   Options.log_file_time_to_roll: 0
+2020/07/16-13:47:17.293704 cbc                       Options.keep_log_file_num: 1000
+2020/07/16-13:47:17.293733 cbc                    Options.recycle_log_file_num: 0
+2020/07/16-13:47:17.293763 cbc                         Options.allow_fallocate: 1
+2020/07/16-13:47:17.293792 cbc                        Options.allow_mmap_reads: 0
+2020/07/16-13:47:17.293861 cbc                       Options.allow_mmap_writes: 0
+2020/07/16-13:47:17.293893 cbc                        Options.use_direct_reads: 0
+2020/07/16-13:47:17.293922 cbc                        Options.use_direct_io_for_flush_and_compaction: 0
+2020/07/16-13:47:17.293951 cbc          Options.create_missing_column_families: 0
+2020/07/16-13:47:17.293980 cbc                              Options.db_log_dir: 
+2020/07/16-13:47:17.294009 cbc                                 Options.wal_dir: ./rocksDB-raft-result/8777/logModule
+2020/07/16-13:47:17.294039 cbc                Options.table_cache_numshardbits: 6
+2020/07/16-13:47:17.294068 cbc                      Options.max_subcompactions: 1
+2020/07/16-13:47:17.294098 cbc                  Options.max_background_flushes: -1
+2020/07/16-13:47:17.294128 cbc                         Options.WAL_ttl_seconds: 0
+2020/07/16-13:47:17.294158 cbc                       Options.WAL_size_limit_MB: 0
+2020/07/16-13:47:17.294187 cbc             Options.manifest_preallocation_size: 4194304
+2020/07/16-13:47:17.294217 cbc                     Options.is_fd_close_on_exec: 1
+2020/07/16-13:47:17.294246 cbc                   Options.advise_random_on_open: 1
+2020/07/16-13:47:17.294276 cbc                    Options.db_write_buffer_size: 0
+2020/07/16-13:47:17.294306 cbc                    Options.write_buffer_manager: 000000001B823C50
+2020/07/16-13:47:17.294335 cbc         Options.access_hint_on_compaction_start: 1
+2020/07/16-13:47:17.294365 cbc  Options.new_table_reader_for_compaction_inputs: 0
+2020/07/16-13:47:17.294394 cbc           Options.random_access_max_buffer_size: 1048576
+2020/07/16-13:47:17.294423 cbc                      Options.use_adaptive_mutex: 0
+2020/07/16-13:47:17.294452 cbc                            Options.rate_limiter: 0000000000000000
+2020/07/16-13:47:17.294482 cbc     Options.sst_file_manager.rate_bytes_per_sec: 0
+2020/07/16-13:47:17.294511 cbc                       Options.wal_recovery_mode: 2
+2020/07/16-13:47:17.294540 cbc                  Options.enable_thread_tracking: 0
+2020/07/16-13:47:17.294569 cbc                  Options.enable_pipelined_write: 0
+2020/07/16-13:47:17.294679 cbc         Options.allow_concurrent_memtable_write: 1
+2020/07/16-13:47:17.294715 cbc      Options.enable_write_thread_adaptive_yield: 1
+2020/07/16-13:47:17.294746 cbc             Options.write_thread_max_yield_usec: 100
+2020/07/16-13:47:17.294776 cbc            Options.write_thread_slow_yield_usec: 3
+2020/07/16-13:47:17.294805 cbc                               Options.row_cache: None
+2020/07/16-13:47:17.294834 cbc                              Options.wal_filter: None
+2020/07/16-13:47:17.294865 cbc             Options.avoid_flush_during_recovery: 0
+2020/07/16-13:47:17.294933 cbc             Options.allow_ingest_behind: 0
+2020/07/16-13:47:17.294964 cbc             Options.preserve_deletes: 0
+2020/07/16-13:47:17.295101 cbc             Options.two_write_queues: 0
+2020/07/16-13:47:17.295138 cbc             Options.manual_wal_flush: 0
+2020/07/16-13:47:17.295170 cbc             Options.max_background_jobs: 2
+2020/07/16-13:47:17.295200 cbc             Options.max_background_compactions: -1
+2020/07/16-13:47:17.295230 cbc             Options.avoid_flush_during_shutdown: 0
+2020/07/16-13:47:17.295260 cbc           Options.writable_file_max_buffer_size: 1048576
+2020/07/16-13:47:17.295291 cbc             Options.delayed_write_rate : 16777216
+2020/07/16-13:47:17.295320 cbc             Options.max_total_wal_size: 0
+2020/07/16-13:47:17.295350 cbc             Options.delete_obsolete_files_period_micros: 21600000000
+2020/07/16-13:47:17.295380 cbc                   Options.stats_dump_period_sec: 600
+2020/07/16-13:47:17.295409 cbc                          Options.max_open_files: -1
+2020/07/16-13:47:17.295439 cbc                          Options.bytes_per_sync: 0
+2020/07/16-13:47:17.295468 cbc                      Options.wal_bytes_per_sync: 0
+2020/07/16-13:47:17.295497 cbc       Options.compaction_readahead_size: 0
+2020/07/16-13:47:17.295526 cbc Compression algorithms supported:
+2020/07/16-13:47:17.295556 cbc 	kZSTD supported: 0
+2020/07/16-13:47:17.295586 cbc 	kSnappyCompression supported: 0
+2020/07/16-13:47:17.295615 cbc 	kBZip2Compression supported: 0
+2020/07/16-13:47:17.295645 cbc 	kZlibCompression supported: 0
+2020/07/16-13:47:17.295676 cbc 	kLZ4Compression supported: 0
+2020/07/16-13:47:17.295705 cbc 	kXpressCompression supported: 0
+2020/07/16-13:47:17.295734 cbc 	kLZ4HCCompression supported: 0
+2020/07/16-13:47:17.295762 cbc 	kZSTDNotFinalCompression supported: 0
+2020/07/16-13:47:17.295794 cbc Fast CRC32 supported: Supported on x86
+2020/07/16-13:47:17.299917 cbc [c:\users\aretter\code\rocksdb\db\version_set.cc:3085] Recovering from manifest file: MANIFEST-000001
+2020/07/16-13:47:17.301119 cbc [c:\users\aretter\code\rocksdb\db\column_family.cc:475] --------------- Options for column family [default]:
+2020/07/16-13:47:17.301172 cbc               Options.comparator: leveldb.BytewiseComparator
+2020/07/16-13:47:17.301205 cbc           Options.merge_operator: None
+2020/07/16-13:47:17.301239 cbc        Options.compaction_filter: None
+2020/07/16-13:47:17.301268 cbc        Options.compaction_filter_factory: None
+2020/07/16-13:47:17.301297 cbc         Options.memtable_factory: SkipListFactory
+2020/07/16-13:47:17.301326 cbc            Options.table_factory: BlockBasedTable
+2020/07/16-13:47:17.301404 cbc            table_factory options:   flush_block_policy_factory: FlushBlockBySizePolicyFactory (000000001B63ECF0)
+  cache_index_and_filter_blocks: 0
+  cache_index_and_filter_blocks_with_high_priority: 0
+  pin_l0_filter_and_index_blocks_in_cache: 0
+  index_type: 0
+  hash_index_allow_collision: 1
+  checksum: 1
+  no_block_cache: 0
+  block_cache: 000000000137EBE0
+  block_cache_name: LRUCache
+  block_cache_options:
+    capacity : 8388608
+    num_shard_bits : 4
+    strict_capacity_limit : 0
+    high_pri_pool_ratio: 0.000
+  block_cache_compressed: 0000000000000000
+  persistent_cache: 0000000000000000
+  block_size: 4096
+  block_size_deviation: 10
+  block_restart_interval: 16
+  index_block_restart_interval: 1
+  metadata_block_size: 4096
+  partition_filters: 0
+  use_delta_encoding: 1
+  filter_policy: nullptr
+  whole_key_filtering: 1
+  verify_compression: 0
+  read_amp_bytes_per_bit: 0
+  format_version: 2
+  enable_index_compression: 1
+  block_align: 0
+2020/07/16-13:47:17.301529 cbc        Options.write_buffer_size: 67108864
+2020/07/16-13:47:17.301562 cbc  Options.max_write_buffer_number: 2
+2020/07/16-13:47:17.301592 cbc          Options.compression: NoCompression
+2020/07/16-13:47:17.301621 cbc                  Options.bottommost_compression: Disabled
+2020/07/16-13:47:17.301651 cbc       Options.prefix_extractor: nullptr
+2020/07/16-13:47:17.301679 cbc   Options.memtable_insert_with_hint_prefix_extractor: nullptr
+2020/07/16-13:47:17.301707 cbc             Options.num_levels: 7
+2020/07/16-13:47:17.301735 cbc        Options.min_write_buffer_number_to_merge: 1
+2020/07/16-13:47:17.301763 cbc     Options.max_write_buffer_number_to_maintain: 0
+2020/07/16-13:47:17.301791 cbc            Options.compression_opts.window_bits: -14
+2020/07/16-13:47:17.301820 cbc                  Options.compression_opts.level: -1
+2020/07/16-13:47:17.301849 cbc               Options.compression_opts.strategy: 0
+2020/07/16-13:47:17.301918 cbc         Options.compression_opts.max_dict_bytes: 0
+2020/07/16-13:47:17.301949 cbc         Options.compression_opts.zstd_max_train_bytes: 0
+2020/07/16-13:47:17.301978 cbc      Options.level0_file_num_compaction_trigger: 4
+2020/07/16-13:47:17.302006 cbc          Options.level0_slowdown_writes_trigger: 20
+2020/07/16-13:47:17.302034 cbc              Options.level0_stop_writes_trigger: 36
+2020/07/16-13:47:17.302062 cbc                   Options.target_file_size_base: 67108864
+2020/07/16-13:47:17.302091 cbc             Options.target_file_size_multiplier: 1
+2020/07/16-13:47:17.302120 cbc                Options.max_bytes_for_level_base: 268435456
+2020/07/16-13:47:17.302149 cbc Options.level_compaction_dynamic_level_bytes: 0
+2020/07/16-13:47:17.302178 cbc          Options.max_bytes_for_level_multiplier: 10.000000
+2020/07/16-13:47:17.302211 cbc Options.max_bytes_for_level_multiplier_addtl[0]: 1
+2020/07/16-13:47:17.302241 cbc Options.max_bytes_for_level_multiplier_addtl[1]: 1
+2020/07/16-13:47:17.302269 cbc Options.max_bytes_for_level_multiplier_addtl[2]: 1
+2020/07/16-13:47:17.302298 cbc Options.max_bytes_for_level_multiplier_addtl[3]: 1
+2020/07/16-13:47:17.302327 cbc Options.max_bytes_for_level_multiplier_addtl[4]: 1
+2020/07/16-13:47:17.302355 cbc Options.max_bytes_for_level_multiplier_addtl[5]: 1
+2020/07/16-13:47:17.302384 cbc Options.max_bytes_for_level_multiplier_addtl[6]: 1
+2020/07/16-13:47:17.302413 cbc       Options.max_sequential_skip_in_iterations: 8
+2020/07/16-13:47:17.302441 cbc                    Options.max_compaction_bytes: 1677721600
+2020/07/16-13:47:17.302469 cbc                        Options.arena_block_size: 8388608
+2020/07/16-13:47:17.302497 cbc   Options.soft_pending_compaction_bytes_limit: 68719476736
+2020/07/16-13:47:17.302525 cbc   Options.hard_pending_compaction_bytes_limit: 274877906944
+2020/07/16-13:47:17.302553 cbc       Options.rate_limit_delay_max_milliseconds: 100
+2020/07/16-13:47:17.302580 cbc                Options.disable_auto_compactions: 0
+2020/07/16-13:47:17.302612 cbc                        Options.compaction_style: kCompactionStyleLevel
+2020/07/16-13:47:17.302641 cbc                          Options.compaction_pri: kByCompensatedSize
+2020/07/16-13:47:17.302669 cbc Options.compaction_options_universal.size_ratio: 1
+2020/07/16-13:47:17.302698 cbc Options.compaction_options_universal.min_merge_width: 2
+2020/07/16-13:47:17.302726 cbc Options.compaction_options_universal.max_merge_width: 4294967295
+2020/07/16-13:47:17.302754 cbc Options.compaction_options_universal.max_size_amplification_percent: 200
+2020/07/16-13:47:17.302782 cbc Options.compaction_options_universal.compression_size_percent: -1
+2020/07/16-13:47:17.302831 cbc Options.compaction_options_universal.stop_style: kCompactionStopStyleTotalSize
+2020/07/16-13:47:17.302926 cbc Options.compaction_options_fifo.max_table_files_size: 1073741824
+2020/07/16-13:47:17.302961 cbc Options.compaction_options_fifo.allow_compaction: 0
+2020/07/16-13:47:17.302991 cbc Options.compaction_options_fifo.ttl: 0
+2020/07/16-13:47:17.303025 cbc                   Options.table_properties_collectors: 
+2020/07/16-13:47:17.303059 cbc                   Options.inplace_update_support: 0
+2020/07/16-13:47:17.303087 cbc                 Options.inplace_update_num_locks: 10000
+2020/07/16-13:47:17.303115 cbc               Options.memtable_prefix_bloom_size_ratio: 0.000000
+2020/07/16-13:47:17.303147 cbc   Options.memtable_huge_page_size: 0
+2020/07/16-13:47:17.303177 cbc                           Options.bloom_locality: 0
+2020/07/16-13:47:17.303206 cbc                    Options.max_successive_merges: 0
+2020/07/16-13:47:17.303236 cbc                Options.optimize_filters_for_hits: 0
+2020/07/16-13:47:17.303266 cbc                Options.paranoid_file_checks: 0
+2020/07/16-13:47:17.303295 cbc                Options.force_consistency_checks: 0
+2020/07/16-13:47:17.303325 cbc                Options.report_bg_io_stats: 0
+2020/07/16-13:47:17.303361 cbc                               Options.ttl: 0
+2020/07/16-13:47:17.311181 cbc [c:\users\aretter\code\rocksdb\db\version_set.cc:3361] Recovered from manifest file:./rocksDB-raft-result/8777/logModule/MANIFEST-000001 succeeded,manifest_file_number is 1, next_file_number is 3, last_sequence is 0, log_number is 0,prev_log_number is 0,max_column_family is 0,min_log_number_to_keep is 0
+2020/07/16-13:47:17.311248 cbc [c:\users\aretter\code\rocksdb\db\version_set.cc:3369] Column family [default] (ID 0), log number is 0
+2020/07/16-13:47:17.311938 cbc EVENT_LOG_v1 {"time_micros": 1594903637311923, "job": 1, "event": "recovery_started", "log_files": [3]}
+2020/07/16-13:47:17.311990 cbc [c:\users\aretter\code\rocksdb\db\db_impl_open.cc:551] Recovering log #3 mode 2
+2020/07/16-13:47:17.312733 cbc [c:\users\aretter\code\rocksdb\db\version_set.cc:2847] Creating manifest 5
+2020/07/16-13:47:17.327726 cbc EVENT_LOG_v1 {"time_micros": 1594903637327710, "job": 1, "event": "recovery_finished"}
+2020/07/16-13:47:17.349459 cbc [c:\users\aretter\code\rocksdb\db\db_impl_open.cc:1219] DB pointer 000000001BA79A30

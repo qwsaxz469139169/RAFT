@@ -204,10 +204,13 @@ public class ConsensusImpl implements Consensus {
     public CommitResponse requestCommit(CommitRequest request) {
 
             String key = request.getMessage();
-            for(LogEntry logEntry :request.getLogEntries()){
-                System.out.println("The Message: "+logEntry.getMessage()+ "has been committed");
-            }
-            System.out.println("The Message: "+key+ "has been committed");
+
+//            for(LogEntry logEntry :request.getLogEntries()){
+//                System.out.println("333333333333333333333333333333");
+//                System.out.println("The Message: "+logEntry.getMessage()+ "has been committed");
+//            }
+
+        System.out.println("The Message: "+key+ "has been committed");
 
             CommitResponse response = new CommitResponse();
             response.setLatency(System.currentTimeMillis() - node.startTime.get(key));

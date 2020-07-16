@@ -33,14 +33,15 @@ public class RaftClient3 {
     private final static RaftRpcClient client = new RaftRpcClientImpl();
     private static List<Message> messages = new CopyOnWriteArrayList<>();
 
-    static List<String> nodelist = Lists.newArrayList("100.70.49.99:8775", "100.70.49.28:8776", "100.70.49.44:8777");
+//    static List<String> nodelist = Lists.newArrayList("100.70.49.99:8775", "100.70.49.28:8776", "100.70.49.44:8777");
+    static List<String> nodelist = Lists.newArrayList("localhost:8775", "localhost:8776", "localhost:8777");
 
     public static void main(String[] args) throws RemotingException, InterruptedException {
 
         AtomicLong count = new AtomicLong(3);
 
         int message = 0;
-        for(int j =0; j<1200; j++){
+        for(int j =0; j<5; j++){
             for(int i=0;i<5;i++){
                 message = message+1;
                 int m = message;
@@ -51,7 +52,7 @@ public class RaftClient3 {
                     @Override
                     public void run() {
 
-                        ClientRequest obj = ClientRequest.newBuilder().key("client1:"+m).value("world:").type(ClientRequest.PUT).build();
+                        ClientRequest obj = ClientRequest.newBuilder().key("client222:"+m).value("world:").type(ClientRequest.PUT).build();
 
                         Request<ClientRequest> r = new Request<>();
                         r.setObj(obj);
@@ -62,10 +63,12 @@ public class RaftClient3 {
 
                         try {
                             response = client.send(r);
-                            ClientResponse clientResponse = response.getResult();
-                            LOGGER.info("request content : {}, extra message : {}, leader latency: {}, follower latency: {}", obj.key, clientResponse.getExtraMessageCount(),clientResponse.getLeaderLatency(),clientResponse.getFollowerLatency());
-                            Message message1 = new Message(obj.key, clientResponse.getExtraMessageCount(), clientResponse.getLeaderLatency(), clientResponse.getFollowerLatency());
-                            messages.add(message1);
+//                            ClientResponse clientResponse = response.getResult();
+//                            LOGGER.info("request content : {}, extra message : {}, leader latency: {}, follower latency: {}", obj.key, clientResponse.getExtraMessageCount(),clientResponse.getLeaderLatency(),clientResponse.getFollowerLatency());
+//                            Message message1 = new Message(obj.key, clientResponse.getExtraMessageCount(), clientResponse.getLeaderLatency(), clientResponse.getFollowerLatency());
+//                            messages.add(message1);
+                            LOGGER.info("request content : {} "+ obj.key);
+
 
                         } catch (Exception e) {
 
@@ -77,21 +80,21 @@ public class RaftClient3 {
             Thread.sleep(1000);
         }
 
-
-        String s = JSON.toJSONString(messages);
-        FileWriter fw = null;
-        File f = new File("D:/raft_1.txt");
-        try {
-            if(!f.exists()){
-                f.createNewFile();
-            }
-            fw = new FileWriter(f);
-            BufferedWriter out = new BufferedWriter(fw);
-            out.write(s, 0, s.length()-1);
-            out.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
+//
+//        String s = JSON.toJSONString(messages);
+//        FileWriter fw = null;
+//        File f = new File("D:/raft_1.txt");
+//        try {
+//            if(!f.exists()){
+//                f.createNewFile();
+//            }
+//            fw = new FileWriter(f);
+//            BufferedWriter out = new BufferedWriter(fw);
+//            out.write(s, 0, s.length()-1);
+//            out.close();
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
         System.out.println("end");
 
 

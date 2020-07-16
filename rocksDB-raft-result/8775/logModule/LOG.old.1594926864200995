@@ -1,0 +1,84 @@
+2020/07/16-20:13:14.471310 c98 RocksDB version: 5.14.3
+2020/07/16-20:13:14.471455 c98 Git sha rocksdb_build_git_sha:@626550343f861ab19d4fdcb74fde728a6c043e6a@
+2020/07/16-20:13:14.471544 c98 Compile date Oct  9 2018
+2020/07/16-20:13:14.471615 c98 DB SUMMARY
+2020/07/16-20:13:14.472122 c98 CURRENT file:  CURRENT
+2020/07/16-20:13:14.472207 c98 IDENTITY file:  IDENTITY
+2020/07/16-20:13:14.472391 c98 MANIFEST file:  MANIFEST-000129 size: 149 Bytes
+2020/07/16-20:13:14.472465 c98 SST files in ./rocksDB-raft-result/8775/logModule dir, Total Num: 2, files: 000124.sst 000128.sst 
+2020/07/16-20:13:14.472535 c98 Write Ahead Log file in ./rocksDB-raft-result/8775/logModule: 000130.log size: 0 ; 
+2020/07/16-20:13:14.472607 c98                         Options.error_if_exists: 0
+2020/07/16-20:13:14.472850 c98                       Options.create_if_missing: 1
+2020/07/16-20:13:14.472895 c98                         Options.paranoid_checks: 1
+2020/07/16-20:13:14.472932 c98                                     Options.env: 00000000009998C0
+2020/07/16-20:13:14.472964 c98                                Options.info_log: 000000001AE597A0
+2020/07/16-20:13:14.472996 c98                Options.max_file_opening_threads: 16
+2020/07/16-20:13:14.473027 c98                              Options.statistics: 0000000000000000
+2020/07/16-20:13:14.473058 c98                               Options.use_fsync: 0
+2020/07/16-20:13:14.473089 c98                       Options.max_log_file_size: 0
+2020/07/16-20:13:14.473120 c98                  Options.max_manifest_file_size: 18446744073709551615
+2020/07/16-20:13:14.473151 c98                   Options.log_file_time_to_roll: 0
+2020/07/16-20:13:14.473182 c98                       Options.keep_log_file_num: 1000
+2020/07/16-20:13:14.473213 c98                    Options.recycle_log_file_num: 0
+2020/07/16-20:13:14.473244 c98                         Options.allow_fallocate: 1
+2020/07/16-20:13:14.473275 c98                        Options.allow_mmap_reads: 0
+2020/07/16-20:13:14.473306 c98                       Options.allow_mmap_writes: 0
+2020/07/16-20:13:14.473338 c98                        Options.use_direct_reads: 0
+2020/07/16-20:13:14.473371 c98                        Options.use_direct_io_for_flush_and_compaction: 0
+2020/07/16-20:13:14.473403 c98          Options.create_missing_column_families: 0
+2020/07/16-20:13:14.473434 c98                              Options.db_log_dir: 
+2020/07/16-20:13:14.473466 c98                                 Options.wal_dir: ./rocksDB-raft-result/8775/logModule
+2020/07/16-20:13:14.473497 c98                Options.table_cache_numshardbits: 6
+2020/07/16-20:13:14.473528 c98                      Options.max_subcompactions: 1
+2020/07/16-20:13:14.473559 c98                  Options.max_background_flushes: -1
+2020/07/16-20:13:14.473591 c98                         Options.WAL_ttl_seconds: 0
+2020/07/16-20:13:14.473622 c98                       Options.WAL_size_limit_MB: 0
+2020/07/16-20:13:14.473653 c98             Options.manifest_preallocation_size: 4194304
+2020/07/16-20:13:14.473684 c98                     Options.is_fd_close_on_exec: 1
+2020/07/16-20:13:14.473716 c98                   Options.advise_random_on_open: 1
+2020/07/16-20:13:14.473747 c98                    Options.db_write_buffer_size: 0
+2020/07/16-20:13:14.473780 c98                    Options.write_buffer_manager: 000000001AEC7430
+2020/07/16-20:13:14.473814 c98         Options.access_hint_on_compaction_start: 1
+2020/07/16-20:13:14.473845 c98  Options.new_table_reader_for_compaction_inputs: 0
+2020/07/16-20:13:14.473876 c98           Options.random_access_max_buffer_size: 1048576
+2020/07/16-20:13:14.473908 c98                      Options.use_adaptive_mutex: 0
+2020/07/16-20:13:14.473939 c98                            Options.rate_limiter: 0000000000000000
+2020/07/16-20:13:14.473971 c98     Options.sst_file_manager.rate_bytes_per_sec: 0
+2020/07/16-20:13:14.474002 c98                       Options.wal_recovery_mode: 2
+2020/07/16-20:13:14.474034 c98                  Options.enable_thread_tracking: 0
+2020/07/16-20:13:14.474065 c98                  Options.enable_pipelined_write: 0
+2020/07/16-20:13:14.474173 c98         Options.allow_concurrent_memtable_write: 1
+2020/07/16-20:13:14.474209 c98      Options.enable_write_thread_adaptive_yield: 1
+2020/07/16-20:13:14.474241 c98             Options.write_thread_max_yield_usec: 100
+2020/07/16-20:13:14.474273 c98            Options.write_thread_slow_yield_usec: 3
+2020/07/16-20:13:14.474307 c98                               Options.row_cache: None
+2020/07/16-20:13:14.474338 c98                              Options.wal_filter: None
+2020/07/16-20:13:14.474370 c98             Options.avoid_flush_during_recovery: 0
+2020/07/16-20:13:14.474402 c98             Options.allow_ingest_behind: 0
+2020/07/16-20:13:14.474433 c98             Options.preserve_deletes: 0
+2020/07/16-20:13:14.474463 c98             Options.two_write_queues: 0
+2020/07/16-20:13:14.474494 c98             Options.manual_wal_flush: 0
+2020/07/16-20:13:14.474525 c98             Options.max_background_jobs: 2
+2020/07/16-20:13:14.474555 c98             Options.max_background_compactions: -1
+2020/07/16-20:13:14.474586 c98             Options.avoid_flush_during_shutdown: 0
+2020/07/16-20:13:14.474617 c98           Options.writable_file_max_buffer_size: 1048576
+2020/07/16-20:13:14.474648 c98             Options.delayed_write_rate : 16777216
+2020/07/16-20:13:14.474679 c98             Options.max_total_wal_size: 0
+2020/07/16-20:13:14.474711 c98             Options.delete_obsolete_files_period_micros: 21600000000
+2020/07/16-20:13:14.474745 c98                   Options.stats_dump_period_sec: 600
+2020/07/16-20:13:14.474776 c98                          Options.max_open_files: -1
+2020/07/16-20:13:14.474807 c98                          Options.bytes_per_sync: 0
+2020/07/16-20:13:14.474838 c98                      Options.wal_bytes_per_sync: 0
+2020/07/16-20:13:14.474868 c98       Options.compaction_readahead_size: 0
+2020/07/16-20:13:14.474899 c98 Compression algorithms supported:
+2020/07/16-20:13:14.474930 c98 	kZSTD supported: 0
+2020/07/16-20:13:14.474961 c98 	kSnappyCompression supported: 0
+2020/07/16-20:13:14.474992 c98 	kBZip2Compression supported: 0
+2020/07/16-20:13:14.475022 c98 	kZlibCompression supported: 0
+2020/07/16-20:13:14.475053 c98 	kLZ4Compression supported: 0
+2020/07/16-20:13:14.475083 c98 	kXpressCompression supported: 0
+2020/07/16-20:13:14.475113 c98 	kLZ4HCCompression supported: 0
+2020/07/16-20:13:14.475145 c98 	kZSTDNotFinalCompression supported: 0
+2020/07/16-20:13:14.475184 c98 Fast CRC32 supported: Supported on x86
+2020/07/16-20:13:14.476415 c98 [c:\users\aretter\code\rocksdb\db\db_impl.cc:252] Shutdown: canceling all background work
+2020/07/16-20:13:14.476495 c98 [c:\users\aretter\code\rocksdb\db\db_impl.cc:398] Shutdown complete

@@ -1,0 +1,187 @@
+2020/07/16-17:20:41.380235 aac RocksDB version: 5.14.3
+2020/07/16-17:20:41.380353 aac Git sha rocksdb_build_git_sha:@626550343f861ab19d4fdcb74fde728a6c043e6a@
+2020/07/16-17:20:41.380427 aac Compile date Oct  9 2018
+2020/07/16-17:20:41.381937 aac DB SUMMARY
+2020/07/16-17:20:41.382958 aac CURRENT file:  CURRENT
+2020/07/16-17:20:41.383051 aac IDENTITY file:  IDENTITY
+2020/07/16-17:20:41.383721 aac MANIFEST file:  MANIFEST-000071 size: 59 Bytes
+2020/07/16-17:20:41.383814 aac SST files in ./rocksDB-raft-result/8777/logModule dir, Total Num: 0, files: 
+2020/07/16-17:20:41.383926 aac Write Ahead Log file in ./rocksDB-raft-result/8777/logModule: 000072.log size: 0 ; 
+2020/07/16-17:20:41.383991 aac                         Options.error_if_exists: 0
+2020/07/16-17:20:41.384220 aac                       Options.create_if_missing: 1
+2020/07/16-17:20:41.384255 aac                         Options.paranoid_checks: 1
+2020/07/16-17:20:41.384285 aac                                     Options.env: 00000000013B9030
+2020/07/16-17:20:41.384315 aac                                Options.info_log: 000000001B976D90
+2020/07/16-17:20:41.384345 aac                Options.max_file_opening_threads: 16
+2020/07/16-17:20:41.384374 aac                              Options.statistics: 0000000000000000
+2020/07/16-17:20:41.384403 aac                               Options.use_fsync: 0
+2020/07/16-17:20:41.384432 aac                       Options.max_log_file_size: 0
+2020/07/16-17:20:41.384525 aac                  Options.max_manifest_file_size: 18446744073709551615
+2020/07/16-17:20:41.384562 aac                   Options.log_file_time_to_roll: 0
+2020/07/16-17:20:41.384596 aac                       Options.keep_log_file_num: 1000
+2020/07/16-17:20:41.384625 aac                    Options.recycle_log_file_num: 0
+2020/07/16-17:20:41.384654 aac                         Options.allow_fallocate: 1
+2020/07/16-17:20:41.384681 aac                        Options.allow_mmap_reads: 0
+2020/07/16-17:20:41.384759 aac                       Options.allow_mmap_writes: 0
+2020/07/16-17:20:41.384788 aac                        Options.use_direct_reads: 0
+2020/07/16-17:20:41.384816 aac                        Options.use_direct_io_for_flush_and_compaction: 0
+2020/07/16-17:20:41.384845 aac          Options.create_missing_column_families: 0
+2020/07/16-17:20:41.384874 aac                              Options.db_log_dir: 
+2020/07/16-17:20:41.384901 aac                                 Options.wal_dir: ./rocksDB-raft-result/8777/logModule
+2020/07/16-17:20:41.384929 aac                Options.table_cache_numshardbits: 6
+2020/07/16-17:20:41.384959 aac                      Options.max_subcompactions: 1
+2020/07/16-17:20:41.384987 aac                  Options.max_background_flushes: -1
+2020/07/16-17:20:41.385016 aac                         Options.WAL_ttl_seconds: 0
+2020/07/16-17:20:41.385044 aac                       Options.WAL_size_limit_MB: 0
+2020/07/16-17:20:41.385072 aac             Options.manifest_preallocation_size: 4194304
+2020/07/16-17:20:41.385101 aac                     Options.is_fd_close_on_exec: 1
+2020/07/16-17:20:41.385129 aac                   Options.advise_random_on_open: 1
+2020/07/16-17:20:41.385157 aac                    Options.db_write_buffer_size: 0
+2020/07/16-17:20:41.385186 aac                    Options.write_buffer_manager: 000000001B73F9E0
+2020/07/16-17:20:41.385215 aac         Options.access_hint_on_compaction_start: 1
+2020/07/16-17:20:41.385244 aac  Options.new_table_reader_for_compaction_inputs: 0
+2020/07/16-17:20:41.385272 aac           Options.random_access_max_buffer_size: 1048576
+2020/07/16-17:20:41.385301 aac                      Options.use_adaptive_mutex: 0
+2020/07/16-17:20:41.385330 aac                            Options.rate_limiter: 0000000000000000
+2020/07/16-17:20:41.385358 aac     Options.sst_file_manager.rate_bytes_per_sec: 0
+2020/07/16-17:20:41.385388 aac                       Options.wal_recovery_mode: 2
+2020/07/16-17:20:41.385417 aac                  Options.enable_thread_tracking: 0
+2020/07/16-17:20:41.385446 aac                  Options.enable_pipelined_write: 0
+2020/07/16-17:20:41.385556 aac         Options.allow_concurrent_memtable_write: 1
+2020/07/16-17:20:41.385592 aac      Options.enable_write_thread_adaptive_yield: 1
+2020/07/16-17:20:41.385620 aac             Options.write_thread_max_yield_usec: 100
+2020/07/16-17:20:41.385648 aac            Options.write_thread_slow_yield_usec: 3
+2020/07/16-17:20:41.385677 aac                               Options.row_cache: None
+2020/07/16-17:20:41.385707 aac                              Options.wal_filter: None
+2020/07/16-17:20:41.385737 aac             Options.avoid_flush_during_recovery: 0
+2020/07/16-17:20:41.385809 aac             Options.allow_ingest_behind: 0
+2020/07/16-17:20:41.385837 aac             Options.preserve_deletes: 0
+2020/07/16-17:20:41.385864 aac             Options.two_write_queues: 0
+2020/07/16-17:20:41.385907 aac             Options.manual_wal_flush: 0
+2020/07/16-17:20:41.385943 aac             Options.max_background_jobs: 2
+2020/07/16-17:20:41.385972 aac             Options.max_background_compactions: -1
+2020/07/16-17:20:41.385999 aac             Options.avoid_flush_during_shutdown: 0
+2020/07/16-17:20:41.386027 aac           Options.writable_file_max_buffer_size: 1048576
+2020/07/16-17:20:41.386055 aac             Options.delayed_write_rate : 16777216
+2020/07/16-17:20:41.386082 aac             Options.max_total_wal_size: 0
+2020/07/16-17:20:41.386110 aac             Options.delete_obsolete_files_period_micros: 21600000000
+2020/07/16-17:20:41.386138 aac                   Options.stats_dump_period_sec: 600
+2020/07/16-17:20:41.386165 aac                          Options.max_open_files: -1
+2020/07/16-17:20:41.386194 aac                          Options.bytes_per_sync: 0
+2020/07/16-17:20:41.386222 aac                      Options.wal_bytes_per_sync: 0
+2020/07/16-17:20:41.386251 aac       Options.compaction_readahead_size: 0
+2020/07/16-17:20:41.386280 aac Compression algorithms supported:
+2020/07/16-17:20:41.386322 aac 	kZSTD supported: 0
+2020/07/16-17:20:41.386354 aac 	kSnappyCompression supported: 0
+2020/07/16-17:20:41.386383 aac 	kBZip2Compression supported: 0
+2020/07/16-17:20:41.386412 aac 	kZlibCompression supported: 0
+2020/07/16-17:20:41.386440 aac 	kLZ4Compression supported: 0
+2020/07/16-17:20:41.386473 aac 	kXpressCompression supported: 0
+2020/07/16-17:20:41.386524 aac 	kLZ4HCCompression supported: 0
+2020/07/16-17:20:41.386554 aac 	kZSTDNotFinalCompression supported: 0
+2020/07/16-17:20:41.386590 aac Fast CRC32 supported: Supported on x86
+2020/07/16-17:20:41.390699 aac [c:\users\aretter\code\rocksdb\db\version_set.cc:3085] Recovering from manifest file: MANIFEST-000071
+2020/07/16-17:20:41.392768 aac [c:\users\aretter\code\rocksdb\db\column_family.cc:475] --------------- Options for column family [default]:
+2020/07/16-17:20:41.392827 aac               Options.comparator: leveldb.BytewiseComparator
+2020/07/16-17:20:41.392859 aac           Options.merge_operator: None
+2020/07/16-17:20:41.392890 aac        Options.compaction_filter: None
+2020/07/16-17:20:41.392918 aac        Options.compaction_filter_factory: None
+2020/07/16-17:20:41.392994 aac         Options.memtable_factory: SkipListFactory
+2020/07/16-17:20:41.393022 aac            Options.table_factory: BlockBasedTable
+2020/07/16-17:20:41.393097 aac            table_factory options:   flush_block_policy_factory: FlushBlockBySizePolicyFactory (000000001B9627C0)
+  cache_index_and_filter_blocks: 0
+  cache_index_and_filter_blocks_with_high_priority: 0
+  pin_l0_filter_and_index_blocks_in_cache: 0
+  index_type: 0
+  hash_index_allow_collision: 1
+  checksum: 1
+  no_block_cache: 0
+  block_cache: 000000000138AB10
+  block_cache_name: LRUCache
+  block_cache_options:
+    capacity : 8388608
+    num_shard_bits : 4
+    strict_capacity_limit : 0
+    high_pri_pool_ratio: 0.000
+  block_cache_compressed: 0000000000000000
+  persistent_cache: 0000000000000000
+  block_size: 4096
+  block_size_deviation: 10
+  block_restart_interval: 16
+  index_block_restart_interval: 1
+  metadata_block_size: 4096
+  partition_filters: 0
+  use_delta_encoding: 1
+  filter_policy: nullptr
+  whole_key_filtering: 1
+  verify_compression: 0
+  read_amp_bytes_per_bit: 0
+  format_version: 2
+  enable_index_compression: 1
+  block_align: 0
+2020/07/16-17:20:41.393212 aac        Options.write_buffer_size: 67108864
+2020/07/16-17:20:41.393244 aac  Options.max_write_buffer_number: 2
+2020/07/16-17:20:41.393273 aac          Options.compression: NoCompression
+2020/07/16-17:20:41.393301 aac                  Options.bottommost_compression: Disabled
+2020/07/16-17:20:41.393329 aac       Options.prefix_extractor: nullptr
+2020/07/16-17:20:41.393356 aac   Options.memtable_insert_with_hint_prefix_extractor: nullptr
+2020/07/16-17:20:41.393384 aac             Options.num_levels: 7
+2020/07/16-17:20:41.393414 aac        Options.min_write_buffer_number_to_merge: 1
+2020/07/16-17:20:41.393510 aac     Options.max_write_buffer_number_to_maintain: 0
+2020/07/16-17:20:41.393542 aac            Options.compression_opts.window_bits: -14
+2020/07/16-17:20:41.393567 aac                  Options.compression_opts.level: -1
+2020/07/16-17:20:41.393588 aac               Options.compression_opts.strategy: 0
+2020/07/16-17:20:41.393610 aac         Options.compression_opts.max_dict_bytes: 0
+2020/07/16-17:20:41.393631 aac         Options.compression_opts.zstd_max_train_bytes: 0
+2020/07/16-17:20:41.393652 aac      Options.level0_file_num_compaction_trigger: 4
+2020/07/16-17:20:41.393673 aac          Options.level0_slowdown_writes_trigger: 20
+2020/07/16-17:20:41.393695 aac              Options.level0_stop_writes_trigger: 36
+2020/07/16-17:20:41.393717 aac                   Options.target_file_size_base: 67108864
+2020/07/16-17:20:41.393738 aac             Options.target_file_size_multiplier: 1
+2020/07/16-17:20:41.393760 aac                Options.max_bytes_for_level_base: 268435456
+2020/07/16-17:20:41.393781 aac Options.level_compaction_dynamic_level_bytes: 0
+2020/07/16-17:20:41.393803 aac          Options.max_bytes_for_level_multiplier: 10.000000
+2020/07/16-17:20:41.393827 aac Options.max_bytes_for_level_multiplier_addtl[0]: 1
+2020/07/16-17:20:41.393848 aac Options.max_bytes_for_level_multiplier_addtl[1]: 1
+2020/07/16-17:20:41.393870 aac Options.max_bytes_for_level_multiplier_addtl[2]: 1
+2020/07/16-17:20:41.393891 aac Options.max_bytes_for_level_multiplier_addtl[3]: 1
+2020/07/16-17:20:41.393950 aac Options.max_bytes_for_level_multiplier_addtl[4]: 1
+2020/07/16-17:20:41.393971 aac Options.max_bytes_for_level_multiplier_addtl[5]: 1
+2020/07/16-17:20:41.393992 aac Options.max_bytes_for_level_multiplier_addtl[6]: 1
+2020/07/16-17:20:41.394014 aac       Options.max_sequential_skip_in_iterations: 8
+2020/07/16-17:20:41.394035 aac                    Options.max_compaction_bytes: 1677721600
+2020/07/16-17:20:41.394056 aac                        Options.arena_block_size: 8388608
+2020/07/16-17:20:41.394077 aac   Options.soft_pending_compaction_bytes_limit: 68719476736
+2020/07/16-17:20:41.394098 aac   Options.hard_pending_compaction_bytes_limit: 274877906944
+2020/07/16-17:20:41.394119 aac       Options.rate_limit_delay_max_milliseconds: 100
+2020/07/16-17:20:41.394140 aac                Options.disable_auto_compactions: 0
+2020/07/16-17:20:41.394163 aac                        Options.compaction_style: kCompactionStyleLevel
+2020/07/16-17:20:41.394185 aac                          Options.compaction_pri: kByCompensatedSize
+2020/07/16-17:20:41.394207 aac Options.compaction_options_universal.size_ratio: 1
+2020/07/16-17:20:41.394228 aac Options.compaction_options_universal.min_merge_width: 2
+2020/07/16-17:20:41.394257 aac Options.compaction_options_universal.max_merge_width: 4294967295
+2020/07/16-17:20:41.394289 aac Options.compaction_options_universal.max_size_amplification_percent: 200
+2020/07/16-17:20:41.394318 aac Options.compaction_options_universal.compression_size_percent: -1
+2020/07/16-17:20:41.394348 aac Options.compaction_options_universal.stop_style: kCompactionStopStyleTotalSize
+2020/07/16-17:20:41.394377 aac Options.compaction_options_fifo.max_table_files_size: 1073741824
+2020/07/16-17:20:41.394405 aac Options.compaction_options_fifo.allow_compaction: 0
+2020/07/16-17:20:41.394433 aac Options.compaction_options_fifo.ttl: 0
+2020/07/16-17:20:41.394673 aac                   Options.table_properties_collectors: 
+2020/07/16-17:20:41.394710 aac                   Options.inplace_update_support: 0
+2020/07/16-17:20:41.394738 aac                 Options.inplace_update_num_locks: 10000
+2020/07/16-17:20:41.394766 aac               Options.memtable_prefix_bloom_size_ratio: 0.000000
+2020/07/16-17:20:41.394797 aac   Options.memtable_huge_page_size: 0
+2020/07/16-17:20:41.394825 aac                           Options.bloom_locality: 0
+2020/07/16-17:20:41.394854 aac                    Options.max_successive_merges: 0
+2020/07/16-17:20:41.394883 aac                Options.optimize_filters_for_hits: 0
+2020/07/16-17:20:41.394953 aac                Options.paranoid_file_checks: 0
+2020/07/16-17:20:41.394982 aac                Options.force_consistency_checks: 0
+2020/07/16-17:20:41.395010 aac                Options.report_bg_io_stats: 0
+2020/07/16-17:20:41.395038 aac                               Options.ttl: 0
+2020/07/16-17:20:41.397374 aac [c:\users\aretter\code\rocksdb\db\version_set.cc:3361] Recovered from manifest file:./rocksDB-raft-result/8777/logModule/MANIFEST-000071 succeeded,manifest_file_number is 71, next_file_number is 73, last_sequence is 0, log_number is 0,prev_log_number is 0,max_column_family is 0,min_log_number_to_keep is 0
+2020/07/16-17:20:41.397435 aac [c:\users\aretter\code\rocksdb\db\version_set.cc:3369] Column family [default] (ID 0), log number is 70
+2020/07/16-17:20:41.398149 aac EVENT_LOG_v1 {"time_micros": 1594916441398125, "job": 1, "event": "recovery_started", "log_files": [72]}
+2020/07/16-17:20:41.398197 aac [c:\users\aretter\code\rocksdb\db\db_impl_open.cc:551] Recovering log #72 mode 2
+2020/07/16-17:20:41.398837 aac [c:\users\aretter\code\rocksdb\db\version_set.cc:2847] Creating manifest 74
+2020/07/16-17:20:41.432525 aac EVENT_LOG_v1 {"time_micros": 1594916441432510, "job": 1, "event": "recovery_finished"}
+2020/07/16-17:20:41.448884 aac [c:\users\aretter\code\rocksdb\db\db_impl_open.cc:1219] DB pointer 000000001B9DE4B0
