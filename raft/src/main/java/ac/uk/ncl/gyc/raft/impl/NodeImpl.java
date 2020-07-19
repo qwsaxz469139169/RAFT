@@ -16,6 +16,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.ThreadLocalRandom;
 import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
+import java.util.concurrent.atomic.AtomicLong;
 import java.util.concurrent.locks.ReentrantLock;
 
 import ac.uk.ncl.gyc.raft.LogModule;
@@ -66,6 +67,8 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
     /** 心跳间隔基数 */
     public final long heartBeatTick = 5 * 1000;
 
+    public static AtomicLong LAXT_INDEX = new AtomicLong(0);
+
 
     private HeartBeatTask heartBeatTask = new HeartBeatTask();
     private ElectionTask electionTask = new ElectionTask();
@@ -95,7 +98,6 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
     /** 日志条目集；每一个条目包含一个用户状态机执行的指令，和收到时的任期号 */
     LogModule logModule;
 
-    ResultJson resultJson;
 
 
 
@@ -181,7 +183,7 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
 
             consensus = new ConsensusImpl(this);
             cluster = new ClusterMembershipChangesImpl(this);
-            RaftThreadPool.execute(piggybackingTask);
+//            RaftThreadPool.execute(piggybackingTask);
 
             RaftThreadPool.scheduleWithFixedDelay(heartBeatTask, 500);
 
@@ -206,7 +208,6 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
         this.config = config;
         stateMachine = StateMachineImpl.getInstance();
         logModule = LogModuleImpl.getInstance();
-        resultJson =ResultJson.getInstance();
 
         nodes = Nodes.getInstance();
         
@@ -315,118 +316,118 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
 
         @Override
         public void run() {
-            while (true){
-                if(status!=LEADER){
-                    continue;
-                }
-
-                if(REQUEST_LIST.size()==0){
-                    continue;
-                }
-
-                long req_index = 0;
-                CopyOnWriteArrayList<PiggybackingLog> req_list = null;
-                for (Map.Entry<Long, CopyOnWriteArrayList<PiggybackingLog>> entry : REQUEST_LIST.entrySet()) {
-                    req_index = entry.getKey();
-                    req_list = entry.getValue();
-                    if (req_list != null) {
-                        break;
-                    }
-                }
-                long RUN_TIME = System.currentTimeMillis() - SYSTEM_START_TIME;
-
-                long cur_index = RUN_TIME / 2;
-
-                if(req_index==cur_index) {
-                    continue;
-                }
-
-                REQUEST_LIST.remove(req_index);
-
-
-                final CopyOnWriteArrayList<PiggybackingLog> log_list = req_list;
-
-                RaftThreadPool.execute(new Runnable() {
-
-                    @Override
-                    public void run() {
-                        System.out.println("____________________________________________________________");
-                        System.out.println("pigg1111Task  start: ");
-                        List<LogEntry> messages = new ArrayList<>();
-                        PiggybackingLog firstLog = null;
-
-                        int extra_message = 6;
-
-
-
-                        for(int i=0; i < log_list.size(); i++ ){
-                            PiggybackingLog log = log_list.get(i);
-                            System.out.println("piggTask  message: "+log.getMessage());
-                            LogEntry logEntry = new LogEntry();
-                            logEntry.setTerm(currentTerm);
-                            logEntry.setMessage(log.getMessage());
-                            logEntry.setStartTime(System.currentTimeMillis());
-                            logEntry.setCommand(Command.newBuilder().
-                                    key(log.getMessage()).
-                                    value("").
-                                    build());
-
-                            if(log.isFirstIndex()){
-                                logEntry.setFirstIndex(true);
-                                firstLog = log;
-                            }
-
-                            extra_message= extra_message+log.getExtraMessage();
-                            messages.add(logEntry);
-
-                        }
-
-                        boolean reqEntry = handlerClientRequest(messages);
-
-                        if(reqEntry){
-                            long latency = System.currentTimeMillis() - firstLog.getStartTime();
-
-
-                            boolean reqCommit = ReqCommit(messages);
-
-                            if(reqCommit){
-                                long followerLatency = 0;
-
-                                for(long a :latencyMap.get(firstLog.getMessage())){
-                                    followerLatency = followerLatency+a;
-                                }
-                                followerLatency = followerLatency/latencyMap.get(firstLog.getMessage()).size();
-
-                                Message message = new Message(firstLog.getMessage(),extra_message,latency,followerLatency);
-                                System.out.println("leaderLatency :      "+latency);
-                                System.out.println("followerLatency :      "+followerLatency);
-                                System.out.println("extra_message :      "+extra_message);
-
-                                List<String> mmmm = new ArrayList<>();
-                                System.out.println("messages size:      "+messages.size());
-
-                                for(int i=0; i < messages.size(); i++){
-                                    mmmm.add(messages.get(i).getMessage());
-                                    System.out.println("Current PIGG messages :      "+messages.get(i).getMessage());
-                                }
-                                message.setMessages(mmmm);
-
-                                resultJson.write(message);
-
-                                System.out.println("piggybacking request successful: firstReq :"+ firstLog.getMessage()+", req count: "+messages.size() );
-
-
-
-                            }
-                        }
-                    }
-                });
-
-
-
-            }
-
-
+//            while (true){
+//                if(status!=LEADER){
+//                    continue;
+//                }
+//
+//                if(REQUEST_LIST.size()==0){
+//                    continue;
+//                }
+//
+//                long req_index = 0;
+//                CopyOnWriteArrayList<PiggybackingLog> req_list = null;
+//                for (Map.Entry<Long, CopyOnWriteArrayList<PiggybackingLog>> entry : REQUEST_LIST.entrySet()) {
+//                    req_index = entry.getKey();
+//                    req_list = entry.getValue();
+//                    if (req_list != null) {
+//                        break;
+//                    }
+//                }
+//                long RUN_TIME = System.currentTimeMillis() - SYSTEM_START_TIME;
+//
+//                long cur_index = RUN_TIME / 2;
+//
+//                if(req_index==cur_index) {
+//                    continue;
+//                }
+//
+//                REQUEST_LIST.remove(req_index);
+//
+//
+//                final CopyOnWriteArrayList<PiggybackingLog> log_list = req_list;
+//
+//                RaftThreadPool.execute(new Runnable() {
+//
+//                    @Override
+//                    public void run() {
+//                        System.out.println("____________________________________________________________");
+//                        System.out.println("pigg1111Task  start: ");
+//                        List<LogEntry> messages = new ArrayList<>();
+//                        PiggybackingLog firstLog = null;
+//
+//                        int extra_message = 6;
+//
+//
+//
+//                        for(int i=0; i < log_list.size(); i++ ){
+//                            PiggybackingLog log = log_list.get(i);
+//                            System.out.println("piggTask  message: "+log.getMessage());
+//                            LogEntry logEntry = new LogEntry();
+//                            logEntry.setTerm(currentTerm);
+//                            logEntry.setMessage(log.getMessage());
+//                            logEntry.setStartTime(System.currentTimeMillis());
+//                            logEntry.setCommand(Command.newBuilder().
+//                                    key(log.getMessage()).
+//                                    value("").
+//                                    build());
+//
+//                            if(log.isFirstIndex()){
+//                                logEntry.setFirstIndex(true);
+//                                firstLog = log;
+//                            }
+//
+//                            extra_message= extra_message+log.getExtraMessage();
+//                            messages.add(logEntry);
+//
+//                        }
+//
+//                        boolean reqEntry = handlerClientRequest(messages);
+//
+//                        if(reqEntry){
+//                            long latency = System.currentTimeMillis() - firstLog.getStartTime();
+//
+//
+//                            boolean reqCommit = ReqCommit(messages);
+//
+//                            if(reqCommit){
+//                                long followerLatency = 0;
+//
+//                                for(long a :latencyMap.get(firstLog.getMessage())){
+//                                    followerLatency = followerLatency+a;
+//                                }
+//                                followerLatency = followerLatency/latencyMap.get(firstLog.getMessage()).size();
+//
+//                                Message message = new Message(firstLog.getMessage(),extra_message,latency,followerLatency);
+//                                System.out.println("leaderLatency :      "+latency);
+//                                System.out.println("followerLatency :      "+followerLatency);
+//                                System.out.println("extra_message :      "+extra_message);
+//
+//                                List<String> mmmm = new ArrayList<>();
+//                                System.out.println("messages size:      "+messages.size());
+//
+//                                for(int i=0; i < messages.size(); i++){
+//                                    mmmm.add(messages.get(i).getMessage());
+//                                    System.out.println("Current PIGG messages :      "+messages.get(i).getMessage());
+//                                }
+//                                message.setMessages(mmmm);
+//
+//                                resultJson.write(message);
+//
+//                                System.out.println("piggybacking request successful: firstReq :"+ firstLog.getMessage()+", req count: "+messages.size() );
+//
+//
+//
+//                            }
+//                        }
+//                    }
+//                });
+//
+//
+//
+//            }
+//
+//
         }
     }
 
@@ -438,12 +439,20 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
      * 当这条日志条目被安全的复制（下面会介绍），领导人会应用这条日志条目到它的状态机中然后把执行的结果返回给客户端。
      * 如果跟随者崩溃或者运行缓慢，再或者网络丢包，
      *  领导人会不断的重复尝试附加日志条目 RPCs （尽管已经回复了客户端）直到所有的跟随者都最终存储了所有的日志条目。
-     * @param messages
+     * @param request
      * @return
      */
     @Override
-    public synchronized boolean handlerClientRequest( List<LogEntry> messages) {
+    public synchronized ClientResponse handlerClientRequest(ClientRequest request) {
+        LOGGER.warn("handlerClientRequest handler {} operation,  and key : [{}], value : [{}]",
+                ClientRequest.Type.value(request.getType()), request.getKey(), request.getValue());
 
+        if (status != LEADER) {
+            LOGGER.warn("Current node is not Leader , redirect to leader node, leader addr : {}, my addr : {}",
+                    nodes.getLeader(), nodes.getSelf().getAdress());
+            request.setRedirect(true);
+            return redirect(request);
+        }
 
         //record extra messages
 //        if(status == LEADER && extraM.get(request.getKey())==null){
@@ -465,9 +474,98 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
 //            }
 //            return new ClientResponse(null);
 //        }
-        List<LogEntry> logEntries = new ArrayList<>();
 
-        for(LogEntry logEntry : messages){
+        PiggybackingLog piggybackingLog = new PiggybackingLog();
+        piggybackingLog.setMessage(request.getKey());
+        piggybackingLog.setStartTime(System.currentTimeMillis());
+
+        if(request.isRedirect()){
+            piggybackingLog.setExtraMessage(1);
+        }else {
+            piggybackingLog.setExtraMessage(0);
+        }
+
+
+
+        long RUN_TIME = System.currentTimeMillis() - SYSTEM_START_TIME;
+        long req_index = RUN_TIME / 2;
+
+        System.out.println("cur_time" + req_index );
+
+
+        CopyOnWriteArrayList<PiggybackingLog> req_list = null;
+        PiggybackingLog firstPiggy = null;
+
+        if(REQUEST_LIST.get(req_index)!=null){
+            System.out.println("cur_req" + request.getKey()+" is  not first p" );
+            req_list = REQUEST_LIST.get(req_index);
+            req_list.add(piggybackingLog);
+            REQUEST_LIST.put(req_index,req_list);
+        }else{
+            System.out.println("cur_req" + request.getKey()+" is first p          req_index"+ req_index );
+            piggybackingLog.setFirstIndex(true);
+            req_list = new CopyOnWriteArrayList();
+            req_list.add(piggybackingLog);
+            REQUEST_LIST.put(req_index,req_list);
+        }
+        System.out.println("last_index   " + LAXT_INDEX.get() );
+
+        if(req_index<=LAXT_INDEX.get()){
+            System.out.println("return 1111111 size" );
+            return ClientResponse.ok();
+        }
+
+        long last_index = LAXT_INDEX.get();
+
+        LAXT_INDEX.getAndSet(req_index);
+        if(last_index == 0){
+            System.out.println("return 3333333 size" );
+
+//        cur_index = req_index;
+            return ClientResponse.ok();
+        }
+
+        if(REQUEST_LIST.get(last_index)==null){
+            System.out.println("return 2222222 size" );
+            return ClientResponse.ok();
+        }else{
+            req_list = REQUEST_LIST.get(last_index);
+        }
+
+        REQUEST_LIST.remove(last_index);
+
+
+        System.out.println("req_list size" + req_list.size());
+        for(PiggybackingLog p : req_list){
+            if(p.isFirstIndex()){
+                firstPiggy = p;
+            }
+        }
+
+        System.out.println("FIST PPP " + firstPiggy.getMessage());
+
+        latencyMap.put(firstPiggy.getMessage(),new CopyOnWriteArrayList<>());
+
+        int extra_message = 6;
+        List<LogEntry> logEntries = new ArrayList<>();
+        LogEntry firstLog = null;
+        for(PiggybackingLog log : req_list){
+            LogEntry logEntry = new LogEntry();
+            logEntry.setTerm(currentTerm);
+            logEntry.setMessage(log.getMessage());
+            logEntry.setStartTime(log.getStartTime());
+
+            logEntry.setCommand(Command.newBuilder().
+                    key(log.getMessage()).
+                    value("").
+                    build());
+
+            if(log.isFirstIndex()){
+                logEntry.setFirstIndex(true);
+                firstLog = logEntry;
+            }
+
+            extra_message= extra_message+log.getExtraMessage();
             // 预提交到本地日志, TODO 预提交
             logModule.write(logEntry);
             logEntries.add(logEntry);
@@ -523,44 +621,58 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
             }
         }
 
-        if(success.get() >= count){
-            return  true;
-        }
+
 
         //  响应客户端(成功一半)
-/*        if (success.get() >= count) {
-            long latency = System.currentTimeMillis() - logEntry.getStartTime();
-            boolean reqCommit = ReqCommit(logEntry);
+       if (success.get() >= count) {
+            long latency = System.currentTimeMillis() - firstLog.getStartTime();
+            boolean reqCommit = ReqCommit(logEntries);
 
             if(reqCommit==true){
-                // 更新
-                commitIndex = logEntry.getIndex();
-                //  应用到状态机
-                getStateMachine().apply(logEntry);
-                lastApplied = commitIndex;
 
-                LOGGER.info("success apply local state machine,  logEntry info : {}", logEntry);
+                for(LogEntry ll : logEntries){
+                    // 更新
+                    commitIndex = ll.getIndex();
+                    //  应用到状态机
+                    getStateMachine().apply(ll);
+                    lastApplied = commitIndex;
+                }
+
+                LOGGER.info("success apply local state machine,  logEntry info : {}", firstLog);
 
 
                 long followerLatency = 0;
 
-                for(long a :latencyMap.get(request.getKey())){
+                for(long a :latencyMap.get(firstLog.getMessage())){
                     followerLatency = followerLatency+a;
                 }
-                followerLatency = followerLatency/latencyMap.get(request.getKey()).size();
+                followerLatency = followerLatency/latencyMap.get(firstLog.getMessage()).size();
+                System.out.println("------------------3333333-------size: "+latencyMap.get(firstLog.getMessage()).size()+"---"+followerLatency);
                 // 返回成功.
-                AtomicInteger extraMCount = extraM.get(request.getKey());
+//                AtomicInteger extraMCount = extraM.get(request.getKey());
+
+                List<String> requests = new ArrayList<>();
+                for(LogEntry lll : logEntries){
+                    String re = lll.getMessage();
+
+                    System.out.print(re+ " has been commit(PIGG)__");
+                    requests.add(re);
+                }
+
+                System.out.println("");
+                System.out.println("requests count: "+ requests.size());
 
                 ClientResponse clientResponse = new ClientResponse();
 
-                if(request.isRedirect()){
-                    clientResponse.setExtraMessageCount(7);
-                }else {
-                    clientResponse.setExtraMessageCount(6);
-                }
-//                clientResponse.setExtraMessageCount(extraMCount.get());
+//                if(request.isRedirect()){
+//                    clientResponse.setExtraMessageCount(7);
+//                }else {
+//                    clientResponse.setExtraMessageCount(6);
+//                }
+                clientResponse.setExtraMessageCount(extra_message);
                 clientResponse.setLeaderLatency(latency);
                 clientResponse.setFollowerLatency(followerLatency);
+                clientResponse.setRequests(requests);
                 clientResponse.setResult("ok");
 
                 extraM.remove(request.getKey());
@@ -571,14 +683,16 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
             }
 
 
-        } else {
-            logModule.removeOnStartIndex(logEntry.getIndex());
-            LOGGER.warn("fail apply local state  machine,  logEntry info : {}", logEntry);
-            // TODO 不应用到状态机,但已经记录到日志中.由定时任务从重试队列取出,然后重复尝试,当达到条件时,应用到状态机.
-            // 这里应该返回错误, 因为没有成功复制过半机器.
-            return ClientResponse.fail();
-        }*/
-             return  false;
+      }
+//else {
+//            logModule.removeOnStartIndex(logEntry.getIndex());
+//            LOGGER.warn("fail apply local state  machine,  logEntry info : {}", logEntry);
+//            // TODO 不应用到状态机,但已经记录到日志中.由定时任务从重试队列取出,然后重复尝试,当达到条件时,应用到状态机.
+//            // 这里应该返回错误, 因为没有成功复制过半机器.
+//            return ClientResponse.fail();
+//        }
+        return ClientResponse.fail();
+
     }
 
     private boolean ReqCommit(List<LogEntry> logEntries){
@@ -670,6 +784,7 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
                         CopyOnWriteArrayList<Long> latencyList = latencyMap.get(key);
                         latencyList.add(result.getLatency());
                         latencyMap.put(key, latencyList);
+                        System.out.println("----------22222222----------- "+result.getLatency());
 
                         return true;
                     }
@@ -730,15 +845,11 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
                     LogEntry entry = null;
                     long en_index = 0;
                     for(int j = 0 ; j<entries.size();j++){
-
                         if(j==0){
-
                             en_index =entries.get(j).getIndex();
                             entry = entries.get(j);
                         }else{
-
                             if(entries.get(j).getIndex()<en_index){
-
                                 en_index = entries.get(j).getIndex();
                                 entry = entries.get(j);
                             }

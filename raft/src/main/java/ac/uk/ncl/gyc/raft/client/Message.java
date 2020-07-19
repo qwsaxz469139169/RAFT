@@ -10,7 +10,7 @@ import java.util.List;
 public class Message {
 
     @JSONField(name = "message")
-    private String message;
+    private int message;
 
     @JSONField(name = "extra_message")
     private int extra_message;
@@ -23,7 +23,7 @@ public class Message {
 
     private List<String> messages;
 
-    public Message(String message, int extra_message, long leader_latency, long follower_latency) {
+    public Message(int message, int extra_message, long leader_latency, long follower_latency) {
         this.message = message;
         this.extra_message = extra_message;
         this.leader_latency = leader_latency;
@@ -38,11 +38,11 @@ public class Message {
         this.messages = messages;
     }
 
-    public String getMessage() {
+    public int getMessage() {
         return message;
     }
 
-    public void setMessage(String message) {
+    public void setMessage(int message) {
         this.message = message;
     }
 

@@ -172,8 +172,8 @@ public class ConsensusImpl implements Consensus {
                     String message = entry.getMessage();
                     if(node.received.get(message)==null){
                         node.received.put(message,1L);
-                        node.startTime.put(message,startTime);
                     }
+                    node.startTime.put(message,startTime);
                 }
 
                 node.getLogModule().write(entry);
@@ -213,7 +213,11 @@ public class ConsensusImpl implements Consensus {
         System.out.println("The Message: "+key+ "has been committed");
 
             CommitResponse response = new CommitResponse();
-            response.setLatency(System.currentTimeMillis() - node.startTime.get(key));
+               long latency = System.currentTimeMillis() - node.startTime.get(key);
+        System.out.println("----------888888---------- "+System.currentTimeMillis());
+        System.out.println("----------999999---------- "+node.startTime.get(key));
+               System.out.println("----------111111----------- "+latency);
+            response.setLatency(latency);
             response.setSuccess(true);
 
             node.received.remove(key);

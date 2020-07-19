@@ -1,8 +1,5 @@
 package ac.uk.ncl.gyc.raft.client;
 
-import ac.uk.ncl.gyc.raft.impl.ResultJson;
-import ac.uk.ncl.gyc.raft.membership.changes.Result;
-
 /**
  * Created by GYC on 2020/7/16.
  */

@@ -1,6 +1,7 @@
 package ac.uk.ncl.gyc.raft.client;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class ClientResponse implements Serializable {
 
@@ -11,6 +12,16 @@ public class ClientResponse implements Serializable {
     long leaderLatency;
 
     long followerLatency;
+
+    List<String> requests;
+
+    public List<String> getRequests() {
+        return requests;
+    }
+
+    public void setRequests(List<String> requests) {
+        this.requests = requests;
+    }
 
     public long getLeaderLatency() {
         return leaderLatency;

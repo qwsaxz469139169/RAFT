@@ -43,8 +43,19 @@ public class PiggRaftClient {
 
                 try {
                     response = client.send(r);
-                    ClientResponse clientResponse = response.getResult();
-                    System.out.println("message :"+obj+ "successful!");
+                    if(response.getResult()!=null){
+                        ClientResponse clientResponse = response.getResult();
+                        System.out.println("message : "+obj+ " send successful!");
+                        if(clientResponse.getRequests()!=null){
+                            for(String s :clientResponse.getRequests()){
+                                System.out.println("message : "+s+ " commit!!!!!!!!!!!");
+                            }
+                            System.out.println("Follower Latency: "+clientResponse.getFollowerLatency()+", Leader Latency: "+clientResponse.getLeaderLatency()+", extra message: "+ clientResponse.getExtraMessageCount());
+                        }
+
+                    }
+
+
 
                 } catch (Exception e) {
 

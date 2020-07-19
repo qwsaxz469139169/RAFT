@@ -27,7 +27,7 @@ import java.util.concurrent.atomic.AtomicLong;
  */
 public class RaftClient3 {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RaftClient2.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RaftClient3.class);
 
 
     private final static RaftRpcClient client = new RaftRpcClientImpl();
@@ -41,8 +41,8 @@ public class RaftClient3 {
         AtomicLong count = new AtomicLong(3);
 
         int message = 0;
-        for(int j =0; j<5; j++){
-            for(int i=0;i<5;i++){
+       for(int j =0; j<1205; j++){
+            for(int i=0;i<15;i++){
                 message = message+1;
                 int m = message;
                 int index = (int) (count.incrementAndGet() % nodelist.size());
@@ -52,7 +52,7 @@ public class RaftClient3 {
                     @Override
                     public void run() {
 
-                        ClientRequest obj = ClientRequest.newBuilder().key("client222:"+m).value("world:").type(ClientRequest.PUT).build();
+                        ClientRequest obj = ClientRequest.newBuilder().key("client6:"+m).value("world:").type(ClientRequest.PUT).build();
 
                         Request<ClientRequest> r = new Request<>();
                         r.setObj(obj);
@@ -63,11 +63,21 @@ public class RaftClient3 {
 
                         try {
                             response = client.send(r);
-//                            ClientResponse clientResponse = response.getResult();
-//                            LOGGER.info("request content : {}, extra message : {}, leader latency: {}, follower latency: {}", obj.key, clientResponse.getExtraMessageCount(),clientResponse.getLeaderLatency(),clientResponse.getFollowerLatency());
-//                            Message message1 = new Message(obj.key, clientResponse.getExtraMessageCount(), clientResponse.getLeaderLatency(), clientResponse.getFollowerLatency());
-//                            messages.add(message1);
-                            LOGGER.info("request content : {} "+ obj.key);
+                            if(response.getResult()!=null){
+                                ClientResponse clientResponse = response.getResult();
+                                System.out.println("message : "+obj.getKey()+ " send successful!");
+                                if(clientResponse.getRequests()!=null){
+                                    int con = 0;
+                                    for(String s :clientResponse.getRequests()){
+                                        con++;
+                                        System.out.println("message : "+s+ " commit!!!!!!!!!!!");
+                                    }
+                                    System.out.println("Follower Latency: "+clientResponse.getFollowerLatency()+", Leader Latency: "+clientResponse.getLeaderLatency()+", extra message: "+ clientResponse.getExtraMessageCount());
+                                    Message message1 = new Message(con, clientResponse.getExtraMessageCount(), clientResponse.getLeaderLatency(), clientResponse.getFollowerLatency());
+                                     messages.add(message1);
+                                }
+
+                            }
 
 
                         } catch (Exception e) {
@@ -76,25 +86,25 @@ public class RaftClient3 {
                     }
                 });
 
-            }
+           }
             Thread.sleep(1000);
         }
 
-//
-//        String s = JSON.toJSONString(messages);
-//        FileWriter fw = null;
-//        File f = new File("D:/raft_1.txt");
-//        try {
-//            if(!f.exists()){
-//                f.createNewFile();
-//            }
-//            fw = new FileWriter(f);
-//            BufferedWriter out = new BufferedWriter(fw);
-//            out.write(s, 0, s.length()-1);
-//            out.close();
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
+
+        String s = JSON.toJSONString(messages);
+        FileWriter fw = null;
+        File f = new File("D:/pigg_raft_2.txt");
+        try {
+            if(!f.exists()){
+                f.createNewFile();
+            }
+            fw = new FileWriter(f);
+            BufferedWriter out = new BufferedWriter(fw);
+            out.write(s, 0, s.length()-1);
+            out.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         System.out.println("end");
 
 
