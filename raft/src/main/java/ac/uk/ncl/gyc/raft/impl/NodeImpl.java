@@ -215,7 +215,7 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
             PeerNode peer = new PeerNode(s);
             nodes.addPeer(peer);
             
-            if (s.equals("localhost:" + config.getSelfPort())) {
+            if (s.equals("100.70.48.24:" + config.getSelfPort())) {
                 System.out.println("设置自身IP：" +s);
                 nodes.setSelf(peer);
             }
@@ -443,7 +443,7 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
      * @return
      */
     @Override
-    public synchronized ClientResponse handlerClientRequest(ClientRequest request) {
+    public synchronized ClientResponse handlerClientRequest(ClientRequest request, long receiveTime) {
         LOGGER.warn("handlerClientRequest handler {} operation,  and key : [{}], value : [{}]",
                 ClientRequest.Type.value(request.getType()), request.getKey(), request.getValue());
 
@@ -477,7 +477,7 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
 
         PiggybackingLog piggybackingLog = new PiggybackingLog();
         piggybackingLog.setMessage(request.getKey());
-        piggybackingLog.setStartTime(System.currentTimeMillis());
+        piggybackingLog.setStartTime(receiveTime);
 
         if(request.isRedirect()){
             piggybackingLog.setExtraMessage(1);
@@ -487,7 +487,7 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
 
 
 
-        long RUN_TIME = System.currentTimeMillis() - SYSTEM_START_TIME;
+        long RUN_TIME = receiveTime - SYSTEM_START_TIME;
         long req_index = RUN_TIME / 2;
 
         System.out.println("cur_time" + req_index );

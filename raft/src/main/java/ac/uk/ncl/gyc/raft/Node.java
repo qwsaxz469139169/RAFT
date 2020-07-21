@@ -42,7 +42,7 @@ public interface Node<T> extends LifeCycle{
      * @param request
      * @return
      */
-    ClientResponse handlerClientRequest( ClientRequest request);
+    ClientResponse handlerClientRequest( ClientRequest request,long receiveTime);
 
     /**
      * 转发给 leader 节点.

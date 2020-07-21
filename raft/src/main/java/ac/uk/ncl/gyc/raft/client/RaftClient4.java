@@ -1,8 +1,6 @@
 package ac.uk.ncl.gyc.raft.client;
 
 import ac.uk.ncl.gyc.raft.current.RaftThreadPool;
-import ac.uk.ncl.gyc.raft.current.SleepHelper;
-import ac.uk.ncl.gyc.raft.entity.LogEntry;
 import ac.uk.ncl.gyc.raft.rpc.RaftRpcClient;
 import ac.uk.ncl.gyc.raft.rpc.RaftRpcClientImpl;
 import ac.uk.ncl.gyc.raft.rpc.Request;
@@ -17,7 +15,6 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.atomic.AtomicLong;
@@ -25,9 +22,9 @@ import java.util.concurrent.atomic.AtomicLong;
 /**
  * Created by GYC on 2020/6/2.
  */
-public class RaftClient3 {
+public class RaftClient4 {
 
-    private static final Logger LOGGER = LoggerFactory.getLogger(RaftClient3.class);
+    private static final Logger LOGGER = LoggerFactory.getLogger(RaftClient4.class);
 
 
     private final static RaftRpcClient client = new RaftRpcClientImpl();
@@ -52,7 +49,7 @@ public class RaftClient3 {
                     @Override
                     public void run() {
 
-                        ClientRequest obj = ClientRequest.newBuilder().key("client1:"+m).value("world:").type(ClientRequest.PUT).build();
+                        ClientRequest obj = ClientRequest.newBuilder().key("client2:"+m).value("world:").type(ClientRequest.PUT).build();
 
                         Request<ClientRequest> r = new Request<>();
                         r.setObj(obj);
@@ -93,7 +90,7 @@ public class RaftClient3 {
 
         String s = JSON.toJSONString(messages);
         FileWriter fw = null;
-        File f = new File("D:/5_raft_1.txt");
+        File f = new File("D:/5_raft_2.txt");
         try {
             if(!f.exists()){
                 f.createNewFile();
