@@ -59,12 +59,14 @@ public class RaftRpcServerImpl implements RaftRpcServer {
 
     @Override
     public Response handlerRequest(Request request) {
+
+        long receiveTime = System.currentTimeMillis();
         if (request.getCmd() == Request.REQ_VOTE) {
             return new Response(node.handlerRequestVote((ElectionTaskRequest) request.getObj()));
         } else if (request.getCmd() == Request.REQ_LOG) {
             return new Response(node.handlerAppendEntries((LogTaskRequest) request.getObj()));
         } else if (request.getCmd() == Request.REQ_CLIENT) {
-            return new Response(node.handlerClientRequest((ClientRequest) request.getObj()));
+            return new Response(node.handlerClientRequest((ClientRequest) request.getObj(),receiveTime));
         } else if (request.getCmd() == Request.CHANGE_CONFIG_REMOVE) {
             return new Response(((ClusterMembershipChanges) node).removeNode((PeerNode) request.getObj()));
         } else if (request.getCmd() == Request.CHANGE_CONFIG_ADD) {

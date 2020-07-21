@@ -100,6 +100,7 @@ public class ConsensusImpl implements Consensus {
     @Override
     public LogTaskResponse appendEntries(LogTaskRequest param) {
         LogTaskResponse result = LogTaskResponse.fail();
+        long startTime = System.currentTimeMillis();
         try {
             if (!appendLock.tryLock()) {
                 return result;
@@ -135,7 +136,7 @@ public class ConsensusImpl implements Consensus {
             String message = param.getEntries()[0].getMessage();
             if(node.received.get(message)==null){
                 node.received.put(message,1L);
-                node.startTime.put(message,System.currentTimeMillis());
+                node.startTime.put(message,startTime);
             }
             // 真实日志
             // 第一次

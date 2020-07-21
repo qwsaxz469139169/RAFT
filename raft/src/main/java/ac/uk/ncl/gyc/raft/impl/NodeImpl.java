@@ -201,6 +201,7 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
             }
         }
 
+
         RPC_SERVER = new RaftRpcServerImpl(config.selfPort, this);
     }
 
@@ -244,7 +245,7 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
      * @return
      */
     @Override
-    public synchronized ClientResponse handlerClientRequest(ClientRequest request) {
+    public synchronized ClientResponse handlerClientRequest(ClientRequest request,long receiveTime) {
 
         LOGGER.warn("handlerClientRequest handler {} operation,  and key : [{}], value : [{}]",
             ClientRequest.Type.value(request.getType()), request.getKey(), request.getValue());
@@ -279,7 +280,7 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
         LogEntry logEntry = new LogEntry();
         logEntry.setTerm(currentTerm);
         logEntry.setMessage(request.getKey());
-        logEntry.setStartTime(System.currentTimeMillis());
+        logEntry.setStartTime(receiveTime);
         logEntry.setCommand(Command.newBuilder().
                 key(request.getKey()).
                 value(request.getValue()).
