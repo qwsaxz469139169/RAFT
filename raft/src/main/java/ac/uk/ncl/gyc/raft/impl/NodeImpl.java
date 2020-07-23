@@ -438,7 +438,6 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
                 long start = System.currentTimeMillis(), end = start;
 
                 // 20 秒重试时间
-                while (end - start < 20 * 1000L) {
                     String key = logEntry.getMessage();
 
                     CommitRequest commitRequest = new CommitRequest();
@@ -460,7 +459,7 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
                     try {
                         Response response = getRaftRpcClient().send(request);
                         if (response == null) {
-                            continue;
+
                         }
                         CommitResponse result = (CommitResponse) response.getResult();
 
@@ -477,9 +476,8 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
                         end = System.currentTimeMillis();
 
                     } catch (Exception e) {
-                        continue;
                     }
-                }
+
                 // 超时了,没办法了
                 return false;
             }
@@ -515,9 +513,6 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
 
                 long start = System.currentTimeMillis(), end = start;
 
-                // 20 秒重试时间
-                while (end - start < 20 * 1000L) {
-
                     LogTaskRequest logTaskRequest = new LogTaskRequest();
                     logTaskRequest.setTerm(currentTerm);
                     logTaskRequest.setServerId(peer.getAdress());
@@ -546,10 +541,10 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
                     logTaskRequest.setEntries(logEntries.toArray(new LogEntry[0]));
 
                     Request request = Request.newBuilder()
-                        .cmd(Request.REQ_LOG)
-                        .obj(logTaskRequest)
-                        .url(peer.getAdress())
-                        .build();
+                            .cmd(Request.REQ_LOG)
+                            .obj(logTaskRequest)
+                            .url(peer.getAdress())
+                            .build();
 
                     AtomicInteger extraMCount = extraM.get(entry.getCommand().getKey());
                     extraMCount.incrementAndGet();
@@ -575,7 +570,7 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
                             // 对方比我大
                             if (result.getTerm() > currentTerm) {
                                 LOGGER.warn("follower [{}] term [{}] than more self, and my term = [{}], so, I will become follower",
-                                    peer, result.getTerm(), currentTerm);
+                                        peer, result.getTerm(), currentTerm);
                                 currentTerm = result.getTerm();
                                 // 认怂, 变成跟随者
                                 status = NodeStatus.FOLLOWER;
@@ -588,7 +583,7 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
                                 }
                                 nextIndexs.put(peer, nextIndex - 1);
                                 LOGGER.warn("follower {} nextIndex not match, will reduce nextIndex and retry RPC append, nextIndex : [{}]", peer.getAdress(),
-                                    nextIndex);
+                                        nextIndex);
                                 // 重来, 直到成功.
                             }
                         }
@@ -607,7 +602,7 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
 //                        replicationFailQueue.offer(model);
                         return false;
                     }
-                }
+
                 // 超时了,没办法了
                 return false;
             }

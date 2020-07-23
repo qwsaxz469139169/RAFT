@@ -102,10 +102,7 @@ public class ConsensusImpl implements Consensus {
         LogTaskResponse result = LogTaskResponse.fail();
         long startTime = System.currentTimeMillis();
         try {
-            if (!appendLock.tryLock()) {
-                return result;
-            }
-
+            appendLock.lock();
             result.setTerm(node.getCurrentTerm());
             // 不够格
             if (param.getTerm() < node.getCurrentTerm()) {

@@ -21,8 +21,8 @@ public class RaftBootStrap {
     public static void main0(String[] args) throws Throwable {
 
        //String[] peerAddr = {"192.168.199.101:8775","192.168.199.102:8775","192.168.199.103:8775"};
-        //String[] peerAddr = {"100.70.49.99:8775","100.70.49.28:8776","100.70.49.44:8777"};
-        String[] peerAddr = {"localhost:8775","localhost:8776","localhost:8777"};
+        String[] peerAddr = {"100.70.49.128:8775", "100.70.49.85:8776", "100.70.48.5:8777"};
+        //String[] peerAddr = {"localhost:8775","localhost:8776","localhost:8777"};
 
         NodesConfigration config = new NodesConfigration();
 
