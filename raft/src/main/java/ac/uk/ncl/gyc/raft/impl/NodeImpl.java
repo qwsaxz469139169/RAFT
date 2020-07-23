@@ -831,8 +831,6 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
 
                 long start = System.currentTimeMillis(), end = start;
 
-                // 20 秒重试时间
-                while (end - start < 20 * 1000L) {
 
                     LogTaskRequest logTaskRequest = new LogTaskRequest();
                     logTaskRequest.setTerm(currentTerm);
@@ -941,7 +939,7 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
 //                        replicationFailQueue.offer(model);
                         return false;
                     }
-                }
+
                 // 超时了,没办法了
                 return false;
             }

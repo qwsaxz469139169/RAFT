@@ -30,7 +30,7 @@ public class RaftClient4 {
     private final static RaftRpcClient client = new RaftRpcClientImpl();
     private static List<Message> messages = new CopyOnWriteArrayList<>();
 
-    static List<String> nodelist = Lists.newArrayList("100.70.48.24:8775","100.70.49.81:8776","100.70.49.64:8777");
+    static List<String> nodelist = Lists.newArrayList("100.70.49.128:8775", "100.70.49.85:8776", "100.70.48.5:8777");    //   static List<String> nodelist = Lists.newArrayList("localhost:8775", "localhost:8776", "localhost:8777");
     //   static List<String> nodelist = Lists.newArrayList("localhost:8775", "localhost:8776", "localhost:8777");
 
     public static void main(String[] args) throws RemotingException, InterruptedException {
@@ -90,7 +90,7 @@ public class RaftClient4 {
 
         String s = JSON.toJSONString(messages);
         FileWriter fw = null;
-        File f = new File("D:/5_raft_2.txt");
+        File f = new File("D:/5_case2Raft1.txt");
         try {
             if(!f.exists()){
                 f.createNewFile();
