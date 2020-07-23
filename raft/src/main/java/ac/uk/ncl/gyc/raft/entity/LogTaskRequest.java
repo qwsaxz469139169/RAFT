@@ -4,19 +4,29 @@ import java.util.Arrays;
 
 public class LogTaskRequest extends BaseRequest {
 
-    /** 领导人的 Id，以便于跟随者重定向请求 */
+    /**
+     * 领导人的 Id，以便于跟随者重定向请求
+     */
     String leaderId;
 
-    /**新的日志条目紧随之前的索引值  */
+    /**
+     * 新的日志条目紧随之前的索引值
+     */
     long prevLogIndex;
 
-    /** prevLogIndex 条目的任期号  */
+    /**
+     * prevLogIndex 条目的任期号
+     */
     long preLogTerm;
 
-    /** 准备存储的日志条目（表示心跳时为空；一次性发送多个是为了提高效率） */
+    /**
+     * 准备存储的日志条目（表示心跳时为空；一次性发送多个是为了提高效率）
+     */
     LogEntry[] entries;
 
-    /** 领导人已经提交的日志的索引值  */
+    /**
+     * 领导人已经提交的日志的索引值
+     */
     long leaderCommit;
 
     public LogTaskRequest() {
@@ -75,14 +85,14 @@ public class LogTaskRequest extends BaseRequest {
     @Override
     public String toString() {
         return "LogTaskRequest{" +
-            "leaderId='" + leaderId + '\'' +
-            ", prevLogIndex=" + prevLogIndex +
-            ", preLogTerm=" + preLogTerm +
-            ", entries=" + Arrays.toString(entries) +
-            ", leaderCommit=" + leaderCommit +
-            ", term=" + term +
-            ", serverId='" + serverId + '\'' +
-            '}';
+                "leaderId='" + leaderId + '\'' +
+                ", prevLogIndex=" + prevLogIndex +
+                ", preLogTerm=" + preLogTerm +
+                ", entries=" + Arrays.toString(entries) +
+                ", leaderCommit=" + leaderCommit +
+                ", term=" + term +
+                ", serverId='" + serverId + '\'' +
+                '}';
     }
 
     public static Builder newBuilder() {

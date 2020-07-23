@@ -11,10 +11,14 @@ import lombok.ToString;
  */
 public class BaseRequest implements Serializable {
 
-    /** 候选人的任期号  */
+    /**
+     * 候选人的任期号
+     */
     public long term;
 
-    /** 被请求者 ID(ip:selfPort) */
+    /**
+     * 被请求者 ID(ip:selfPort)
+     */
     public String serverId;
 
     public long getTerm() {

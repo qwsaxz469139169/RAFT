@@ -7,7 +7,7 @@ import java.io.Serializable;
 /**
  * Created by GYC on 2020/7/5.
  */
-public class Message implements Serializable{
+public class Message implements Serializable {
 
     @JSONField(name = "message")
     private String message;

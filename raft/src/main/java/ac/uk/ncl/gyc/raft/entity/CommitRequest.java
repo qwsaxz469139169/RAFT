@@ -5,7 +5,7 @@ import java.util.List;
 /**
  * Created by GYC on 2020/6/27.
  */
-public class CommitRequest extends BaseRequest{
+public class CommitRequest extends BaseRequest {
 
     String message;
 

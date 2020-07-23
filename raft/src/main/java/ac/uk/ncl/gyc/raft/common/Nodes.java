@@ -5,7 +5,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- *
  * 节点集合. 去重.
  *
  * @author gyc
@@ -16,7 +15,9 @@ public class Nodes implements Serializable {
 
     private volatile PeerNode leader;
 
-    /** final */
+    /**
+     * final
+     */
     private volatile PeerNode self;
 
     private Nodes() {
@@ -69,9 +70,9 @@ public class Nodes implements Serializable {
     @Override
     public String toString() {
         return "Nodes{" +
-            "nodesList=" + nodesList +
-            ", leader=" + leader +
-            ", self=" + self +
-            '}';
+                "nodesList=" + nodesList +
+                ", leader=" + leader +
+                ", self=" + self +
+                '}';
     }
 }

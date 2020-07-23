@@ -18,7 +18,9 @@ public class StateMachineImpl implements StateMachine {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(StateMachineImpl.class);
 
-    /** public just for test */
+    /**
+     * public just for test
+     */
     public static String dbDir;
     public static String stateMachineDir;
 
@@ -29,7 +31,7 @@ public class StateMachineImpl implements StateMachine {
             dbDir = "./rocksDB-raft/" + System.getProperty("serverPort");
         }
         if (stateMachineDir == null) {
-            stateMachineDir =dbDir + "/stateMachine";
+            stateMachineDir = dbDir + "/stateMachine";
         }
         RocksDB.loadLibrary();
     }

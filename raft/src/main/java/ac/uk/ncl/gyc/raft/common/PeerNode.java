@@ -4,7 +4,9 @@ import java.util.Objects;
 
 public class PeerNode {
 
-    /** ip:selfPort */
+    /**
+     * ip:selfPort
+     */
     private final String address;
 
 
@@ -38,7 +40,7 @@ public class PeerNode {
     @Override
     public String toString() {
         return "PeerNode{" +
-            "addr='" + address + '\'' +
-            '}';
+                "addr='" + address + '\'' +
+                '}';
     }
 }

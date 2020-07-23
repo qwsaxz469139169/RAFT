@@ -50,14 +50,22 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
 
     private static final Logger LOGGER = LoggerFactory.getLogger(NodeImpl.class);
 
-    /** 选举时间间隔基数 */
+    /**
+     * 选举时间间隔基数
+     */
     public volatile long electionTime = 15 * 1000;
-    /** 上一次选举时间 */
+    /**
+     * 上一次选举时间
+     */
     public volatile long preElectionTime = 0;
 
-    /** 上次一心跳时间戳 */
+    /**
+     * 上次一心跳时间戳
+     */
     public volatile long preHeartBeatTime = 0;
-    /** 心跳间隔基数 */
+    /**
+     * 心跳间隔基数
+     */
     public final long heartBeatTick = 5 * 1000;
 
 
@@ -70,6 +78,7 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
 
     /**
      * 节点当前状态
+     *
      * @see NodeStatus
      */
     public volatile int status = NodeStatus.FOLLOWER;
@@ -80,29 +89,43 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
 
     /* ============ 所有服务器上持久存在的 ============= */
 
-    /** 服务器最后一次知道的任期号（初始化为 0，持续递增） */
+    /**
+     * 服务器最后一次知道的任期号（初始化为 0，持续递增）
+     */
     volatile long currentTerm = 0;
-    /** 在当前获得选票的候选人的 Id */
+    /**
+     * 在当前获得选票的候选人的 Id
+     */
     volatile String votedForId;
-    /** 日志条目集；每一个条目包含一个用户状态机执行的指令，和收到时的任期号 */
+    /**
+     * 日志条目集；每一个条目包含一个用户状态机执行的指令，和收到时的任期号
+     */
     LogModule logModule;
 
 
 
     /* ============ 所有服务器上经常变的 ============= */
 
-    /** 已知的最大的已经被提交的日志条目的索引值 */
+    /**
+     * 已知的最大的已经被提交的日志条目的索引值
+     */
     volatile long commitIndex;
 
-    /** 最后被应用到状态机的日志条目索引值（初始化为 0，持续递增) */
+    /**
+     * 最后被应用到状态机的日志条目索引值（初始化为 0，持续递增)
+     */
     volatile long lastApplied = 0;
 
     /* ========== 在领导人里经常改变的(选举后重新初始化) ================== */
 
-    /** 对于每一个服务器，需要发送给他的下一个日志条目的索引值（初始化为领导人最后索引值加一） */
+    /**
+     * 对于每一个服务器，需要发送给他的下一个日志条目的索引值（初始化为领导人最后索引值加一）
+     */
     Map<PeerNode, Long> nextIndexs;
 
-    /** 对于每一个服务器，已经复制给他的日志的最高索引值 */
+    /**
+     * 对于每一个服务器，已经复制给他的日志的最高索引值
+     */
     Map<PeerNode, Long> matchIndexs;
 
 
@@ -119,13 +142,15 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
 
     public StateMachine stateMachine;
 
-    public static Map<String,Long> received = new ConcurrentHashMap();
+    public static Map<String, Long> received = new ConcurrentHashMap();
 
-    public static Map<String,Long> startTime = new ConcurrentHashMap();
+    public static Map<String, Long> startTime = new ConcurrentHashMap();
 
     /* ============================== */
 
-    /** 一致性模块实现 */
+    /**
+     * 一致性模块实现
+     */
     Consensus consensus;
 
     ClusterMembershipChanges cluster;
@@ -133,16 +158,15 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
 
     /* ============================== */
 
-    public static Map<String,CopyOnWriteArrayList<Long>> latencyMap= new ConcurrentHashMap();
+    public static Map<String, CopyOnWriteArrayList<Long>> latencyMap = new ConcurrentHashMap();
 
-    public static Map<String,Boolean> isRedirect= new ConcurrentHashMap();
+    public static Map<String, Boolean> isRedirect = new ConcurrentHashMap();
 
-    public static Map<String,Long> leader_latencyMap= new ConcurrentHashMap();
+    public static Map<String, Long> leader_latencyMap = new ConcurrentHashMap();
 
     public static CopyOnWriteArrayList<String> ACKS = new CopyOnWriteArrayList<>();
 
-    public static Map<String,Integer> LEADER_ACKS= new ConcurrentHashMap();
-
+    public static Map<String, Integer> LEADER_ACKS = new ConcurrentHashMap();
 
 
     private NodeImpl() {
@@ -196,13 +220,13 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
         logModule = LogModuleImpl.getInstance();
 
         nodes = Nodes.getInstance();
-        
+
         for (String s : config.getPeerAddrs()) {
             PeerNode peer = new PeerNode(s);
             nodes.addPeer(peer);
-            
+
             if (s.equals("localhost:" + config.getSelfPort())) {
-                System.out.println("设置自身IP：" +s);
+                System.out.println("设置自身IP：" + s);
                 nodes.setSelf(peer);
             }
         }
@@ -236,7 +260,7 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
     @Override
     public ClientResponse redirect(ClientRequest request) {
         Request<ClientRequest> r = Request.newBuilder().
-            obj(request).url(nodes.getLeader().getAdress()).cmd(Request.REQ_CLIENT).build();
+                obj(request).url(nodes.getLeader().getAdress()).cmd(Request.REQ_CLIENT).build();
         Response response = raftRpcClient.send(r);
         return (ClientResponse) response.getResult();
     }
@@ -246,19 +270,20 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
      * 领导人把这条指令作为一条新的日志条目附加到日志中去，然后并行的发起附加条目 RPCs 给其他的服务器，让他们复制这条日志条目。
      * 当这条日志条目被安全的复制（下面会介绍），领导人会应用这条日志条目到它的状态机中然后把执行的结果返回给客户端。
      * 如果跟随者崩溃或者运行缓慢，再或者网络丢包，
-     *  领导人会不断的重复尝试附加日志条目 RPCs （尽管已经回复了客户端）直到所有的跟随者都最终存储了所有的日志条目。
+     * 领导人会不断的重复尝试附加日志条目 RPCs （尽管已经回复了客户端）直到所有的跟随者都最终存储了所有的日志条目。
+     *
      * @param request
      * @return
      */
     @Override
-    public synchronized ClientResponse handlerClientRequest(ClientRequest request,long receiveTime) {
+    public synchronized ClientResponse handlerClientRequest(ClientRequest request, long receiveTime) {
 
         LOGGER.warn("handlerClientRequest handler {} operation,  and key : [{}], value : [{}]",
-            ClientRequest.Type.value(request.getType()), request.getKey(), request.getValue());
+                ClientRequest.Type.value(request.getType()), request.getKey(), request.getValue());
 
         if (status != LEADER) {
             LOGGER.warn("Current node is not Leader , redirect to leader node, leader addr : {}, my addr : {}",
-                nodes.getLeader(), nodes.getSelf().getAdress());
+                    nodes.getLeader(), nodes.getSelf().getAdress());
 
             try {
                 Thread.sleep(2);
@@ -266,36 +291,35 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
                 e.printStackTrace();
             }
 
-            System.out.println("cur redirect contain ack count: "+ ACKS.size());
+            System.out.println("cur redirect contain ack count: " + ACKS.size());
             if (ACKS.size() > 0) {
                 List<String> ac = new ArrayList<>();
-                for(String a : ACKS){
+                for (String a : ACKS) {
                     ac.add(a);
                     ACKS.remove(a);
                 }
                 request.setAcks(ac);
             }
 
-            received.put(request.getKey(),1L);
-            startTime.put(request.getKey(),receiveTime);
+            received.put(request.getKey(), 1L);
+            startTime.put(request.getKey(), receiveTime);
 
             request.setRedirect(true);
             return redirect(request);
         }
 
         //record extra messages
-        if(status == LEADER ){
-            if(request.isRedirect()){
-                leader_latencyMap.put(request.getKey(),receiveTime-2);
-                isRedirect.put(request.getKey(),true);
-            }else {
-                leader_latencyMap.put(request.getKey(),receiveTime);
-                isRedirect.put(request.getKey(),false);
+        if (status == LEADER) {
+            if (request.isRedirect()) {
+                leader_latencyMap.put(request.getKey(), receiveTime - 2);
+                isRedirect.put(request.getKey(), true);
+            } else {
+                leader_latencyMap.put(request.getKey(), receiveTime);
+                isRedirect.put(request.getKey(), false);
             }
 
-            latencyMap.put(request.getKey(),new CopyOnWriteArrayList<>());
+            latencyMap.put(request.getKey(), new CopyOnWriteArrayList<>());
         }
-
 
 
         if (request.getType() == ClientRequest.GET) {
@@ -312,22 +336,22 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
         }
 
         List<String> commitList = new ArrayList<>();
-        if( request.getAcks()!=null){
-            System.out.println("cur receive ack count: "+ request.getAcks().size());
-            for(String ack : request.getAcks()){
-                if(LEADER_ACKS.get(ack)!=null){
+        if (request.getAcks() != null) {
+            System.out.println("cur receive ack count: " + request.getAcks().size());
+            for (String ack : request.getAcks()) {
+                if (LEADER_ACKS.get(ack) != null) {
                     int ack_cout = LEADER_ACKS.get(ack);
-                    LEADER_ACKS.put(ack,ack_cout+1);
+                    LEADER_ACKS.put(ack, ack_cout + 1);
                     commitList.add(ack);
                     LEADER_ACKS.remove(ack);
-                }else{
-                    LEADER_ACKS.put(ack,1);
+                } else {
+                    LEADER_ACKS.put(ack, 1);
                 }
             }
-        }else{
+        } else {
             System.out.println("cur receive ack count: 0 ");
         }
-        System.out.println("cur pre commit message count: "+commitList.size());
+        System.out.println("cur pre commit message count: " + commitList.size());
 
 
         LogEntry logEntry = new LogEntry();
@@ -389,26 +413,26 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
                 commitIndex = N;
             }
         }
-        if (success.get() >= count){
+        if (success.get() >= count) {
             commitIndex = logEntry.getIndex();
             //  应用到状态机
             getStateMachine().apply(logEntry);
             lastApplied = commitIndex;
             List<Message> mess = new ArrayList<>();
-            System.out.println("response client, committed message count: "+commitList.size());
-            if(commitList.size()>0){
-                for(String M_NAME : commitList){
-                    System.out.println(" committed message: "+M_NAME);
+            System.out.println("response client, committed message count: " + commitList.size());
+            if (commitList.size() > 0) {
+                for (String M_NAME : commitList) {
+                    System.out.println(" committed message: " + M_NAME);
                     long followerLatency2 = 0;
                     long leaderLatency2 = System.currentTimeMillis() - leader_latencyMap.get(M_NAME);
-                    System.out.println(" leader_latencyMap.get(M_NAME): "+ leader_latencyMap.get(M_NAME));
-                    System.out.println(" leaderLatency2: "+ leaderLatency2);
-                    for(long a :latencyMap.get(M_NAME)){
-                        System.out.println(" a: "+ a);
-                        followerLatency2 = followerLatency2+a;
+                    System.out.println(" leader_latencyMap.get(M_NAME): " + leader_latencyMap.get(M_NAME));
+                    System.out.println(" leaderLatency2: " + leaderLatency2);
+                    for (long a : latencyMap.get(M_NAME)) {
+                        System.out.println(" a: " + a);
+                        followerLatency2 = followerLatency2 + a;
                     }
-                    followerLatency2 = followerLatency2/latencyMap.get(M_NAME).size();
-                    System.out.println(" followerLatency2: "+ followerLatency2);
+                    followerLatency2 = followerLatency2 / latencyMap.get(M_NAME).size();
+                    System.out.println(" followerLatency2: " + followerLatency2);
                     Message m = new Message(M_NAME, leaderLatency2, followerLatency2);
                     mess.add(m);
                     latencyMap.remove(M_NAME);
@@ -420,16 +444,14 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
             clientResponse.setResult("ok");
             return clientResponse;
 
-        }else {
+        } else {
             return ClientResponse.ok();
         }
 
 
-
-
     }
 
-    private boolean ReqCommit(List<String> commitList){
+    private boolean ReqCommit(List<String> commitList) {
         final AtomicInteger success = new AtomicInteger(0);
 
         List<Future<Boolean>> futureList = new CopyOnWriteArrayList<>();
@@ -440,7 +462,7 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
             // TODO check self and RaftThreadPool
             count++;
 
-            futureList.add(Commit(peer,commitList));
+            futureList.add(Commit(peer, commitList));
         }
 
         CountDownLatch latch = new CountDownLatch(futureList.size());
@@ -461,7 +483,7 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
 
         if (success.get() >= count) {
             return true;
-        }else{
+        } else {
             return false;
         }
     }
@@ -502,10 +524,10 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
 
                             Map<String, Long> lMap = result.getLatency();
 
-                            for(String mName : lMap.keySet()){
+                            for (String mName : lMap.keySet()) {
                                 CopyOnWriteArrayList<Long> latencyList = latencyMap.get(mName);
                                 latencyList.add(lMap.get(mName));
-                                latencyMap.put(mName,latencyList);
+                                latencyMap.put(mName, latencyList);
                             }
 
 
@@ -532,7 +554,7 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
                 public void run() {
                     try {
                         resultList.add(future.get());
-                    } catch (CancellationException  | ExecutionException | InterruptedException e) {
+                    } catch (CancellationException | ExecutionException | InterruptedException e) {
                         e.printStackTrace();
                         resultList.add(false);
                     } finally {
@@ -544,7 +566,9 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
     }
 
 
-    /** 复制到其他机器  */
+    /**
+     * 复制到其他机器
+     */
     public Future<Boolean> replication(PeerNode peer, LogEntry entry) {
 
         return RaftThreadPool.submit(new Callable() {
@@ -553,91 +577,90 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
 
                 long start = System.currentTimeMillis(), end = start;
 
-                    LogTaskRequest logTaskRequest = new LogTaskRequest();
-                    logTaskRequest.setTerm(currentTerm);
-                    logTaskRequest.setServerId(peer.getAdress());
-                    logTaskRequest.setLeaderId(nodes.getSelf().getAdress());
+                LogTaskRequest logTaskRequest = new LogTaskRequest();
+                logTaskRequest.setTerm(currentTerm);
+                logTaskRequest.setServerId(peer.getAdress());
+                logTaskRequest.setLeaderId(nodes.getSelf().getAdress());
 
-                    logTaskRequest.setLeaderCommit(commitIndex);
+                logTaskRequest.setLeaderCommit(commitIndex);
 
-                    // 以我这边为准, 这个行为通常是成为 leader 后,首次进行 RPC 才有意义.
-                    Long nextIndex = nextIndexs.get(peer);
-                    LinkedList<LogEntry> logEntries = new LinkedList<>();
-                    if (entry.getIndex() >= nextIndex) {
-                        for (long i = nextIndex; i <= entry.getIndex(); i++) {
-                            LogEntry l = logModule.read(i);
-                            if (l != null) {
-                                logEntries.add(l);
-                            }
+                // 以我这边为准, 这个行为通常是成为 leader 后,首次进行 RPC 才有意义.
+                Long nextIndex = nextIndexs.get(peer);
+                LinkedList<LogEntry> logEntries = new LinkedList<>();
+                if (entry.getIndex() >= nextIndex) {
+                    for (long i = nextIndex; i <= entry.getIndex(); i++) {
+                        LogEntry l = logModule.read(i);
+                        if (l != null) {
+                            logEntries.add(l);
                         }
-                    } else {
-                        logEntries.add(entry);
                     }
-                    // 最小的那个日志.
-                    LogEntry preLog = getPreLog(logEntries.getFirst());
-                    logTaskRequest.setPreLogTerm(preLog.getTerm());
-                    logTaskRequest.setPrevLogIndex(preLog.getIndex());
+                } else {
+                    logEntries.add(entry);
+                }
+                // 最小的那个日志.
+                LogEntry preLog = getPreLog(logEntries.getFirst());
+                logTaskRequest.setPreLogTerm(preLog.getTerm());
+                logTaskRequest.setPrevLogIndex(preLog.getIndex());
 
-                    logTaskRequest.setEntries(logEntries.toArray(new LogEntry[0]));
+                logTaskRequest.setEntries(logEntries.toArray(new LogEntry[0]));
 
-                    Request request = Request.newBuilder()
-                            .cmd(Request.REQ_LOG)
-                            .obj(logTaskRequest)
-                            .url(peer.getAdress())
-                            .build();
+                Request request = Request.newBuilder()
+                        .cmd(Request.REQ_LOG)
+                        .obj(logTaskRequest)
+                        .url(peer.getAdress())
+                        .build();
 
 
+                try {
+                    Response response = getRaftRpcClient().send(request);
+                    if (response == null) {
+                        return false;
+                    }
+                    LogTaskResponse result = (LogTaskResponse) response.getResult();
+                    if (result != null && result.isSuccess()) {
+                        LOGGER.info("append follower entry success , follower=[{}], entry=[{}]", peer, logTaskRequest.getEntries());
+                        // update 这两个追踪值
+                        nextIndexs.put(peer, entry.getIndex() + 1);
+                        matchIndexs.put(peer, entry.getIndex());
 
-                    try {
-                        Response response = getRaftRpcClient().send(request);
-                        if (response == null) {
+                        Map<String, Long> lMap = result.getCommittedList();
+
+                        for (Map.Entry<String, Long> entry1 : lMap.entrySet()) {
+                            String mName = entry1.getKey();
+                            long latency = entry1.getValue();
+                            CopyOnWriteArrayList<Long> latencyList = latencyMap.get(mName);
+                            latencyList.add(latency);
+                            latencyMap.put(mName, latencyList);
+                        }
+
+                        return true;
+                    } else if (result != null) {
+                        // 对方比我大
+                        if (result.getTerm() > currentTerm) {
+                            LOGGER.warn("follower [{}] term [{}] than more self, and my term = [{}], so, I will become follower",
+                                    peer, result.getTerm(), currentTerm);
+                            currentTerm = result.getTerm();
+                            // 认怂, 变成跟随者
+                            status = NodeStatus.FOLLOWER;
                             return false;
-                        }
-                        LogTaskResponse result = (LogTaskResponse) response.getResult();
-                        if (result != null && result.isSuccess()) {
-                            LOGGER.info("append follower entry success , follower=[{}], entry=[{}]", peer, logTaskRequest.getEntries());
-                            // update 这两个追踪值
-                            nextIndexs.put(peer, entry.getIndex() + 1);
-                            matchIndexs.put(peer, entry.getIndex());
-
-                            Map<String, Long> lMap = result.getCommittedList();
-
-                            for(Map.Entry<String, Long> entry1 : lMap.entrySet()){
-                                String mName = entry1.getKey();
-                                long latency =entry1.getValue();
-                                CopyOnWriteArrayList<Long> latencyList = latencyMap.get(mName);
-                                latencyList.add(latency);
-                                latencyMap.put(mName,latencyList);
+                        } // 没我大, 却失败了,说明 index 不对.或者 term 不对.
+                        else {
+                            // 递减
+                            if (nextIndex == 0) {
+                                nextIndex = 1L;
                             }
-
-                            return true;
-                        } else if (result != null) {
-                            // 对方比我大
-                            if (result.getTerm() > currentTerm) {
-                                LOGGER.warn("follower [{}] term [{}] than more self, and my term = [{}], so, I will become follower",
-                                        peer, result.getTerm(), currentTerm);
-                                currentTerm = result.getTerm();
-                                // 认怂, 变成跟随者
-                                status = NodeStatus.FOLLOWER;
-                                return false;
-                            } // 没我大, 却失败了,说明 index 不对.或者 term 不对.
-                            else {
-                                // 递减
-                                if (nextIndex == 0) {
-                                    nextIndex = 1L;
-                                }
-                                nextIndexs.put(peer, nextIndex - 1);
-                                LOGGER.warn("follower {} nextIndex not match, will reduce nextIndex and retry RPC append, nextIndex : [{}]", peer.getAdress(),
-                                        nextIndex);
-                                // 重来, 直到成功.
-                            }
+                            nextIndexs.put(peer, nextIndex - 1);
+                            LOGGER.warn("follower {} nextIndex not match, will reduce nextIndex and retry RPC append, nextIndex : [{}]", peer.getAdress(),
+                                    nextIndex);
+                            // 重来, 直到成功.
                         }
+                    }
 
-                        end = System.currentTimeMillis();
+                    end = System.currentTimeMillis();
 
-                    } catch (Exception e) {
-                        LOGGER.warn(e.getMessage(), e);
-                        // TODO 到底要不要放队列重试?
+                } catch (Exception e) {
+                    LOGGER.warn(e.getMessage(), e);
+                    // TODO 到底要不要放队列重试?
 //                        ReplicationFailModel model =  ReplicationFailModel.newBuilder()
 //                            .callable(this)
 //                            .logEntry(entry)
@@ -645,8 +668,8 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
 //                            .offerTime(System.currentTimeMillis())
 //                            .build();
 //                        replicationFailQueue.offer(model);
-                        return false;
-                    }
+                    return false;
+                }
 
                 // 超时了,没办法了
                 return false;
@@ -668,7 +691,9 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
 
     class ReplicationFailQueueConsumer implements Runnable {
 
-        /** 一分钟 */
+        /**
+         * 一分钟
+         */
         long intervalTime = 1000 * 60;
 
         @Override
@@ -728,10 +753,10 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
 
     /**
      * 1. 在转变成候选人后就立即开始选举过程
-     *      自增当前的任期号（currentTerm）
-     *      给自己投票
-     *      重置选举超时计时器
-     *      发送请求投票的 RPC 给其他所有服务器
+     * 自增当前的任期号（currentTerm）
+     * 给自己投票
+     * 重置选举超时计时器
+     * 发送请求投票的 RPC 给其他所有服务器
      * 2. 如果接收到大多数服务器的选票，那么就变成领导人
      * 3. 如果接收到来自新的领导人的附加日志 RPC，转变成跟随者
      * 4. 如果选举过程超时，再次发起一轮选举
@@ -746,25 +771,25 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
             }
 
             long current = System.currentTimeMillis();
-            
+
             // 基于 RAFT 的随机时间,解决冲突.
             electionTime = electionTime + ThreadLocalRandom.current().nextInt(50);
-            
+
             if (current - preElectionTime < electionTime) {
                 return;
             }
-            
+
             status = NodeStatus.CANDIDATE;
-            
+
             LOGGER.error("node {} will become CANDIDATE and start election leader, current term : [{}], LastEntry : [{}]",
-                nodes.getSelf(), currentTerm, logModule.getLast());
+                    nodes.getSelf(), currentTerm, logModule.getLast());
 
             preElectionTime = System.currentTimeMillis() + ThreadLocalRandom.current().nextInt(200) + 150;
 
             currentTerm = currentTerm + 1;
             // 推荐自己.
             votedForId = nodes.getSelf().getAdress();
-            System.out.println("votedForId：" +votedForId);
+            System.out.println("votedForId：" + votedForId);
 
             List<PeerNode> peers = nodes.getPeersWithOutSelf();
 
@@ -786,22 +811,22 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
                         }
 
                         ElectionTaskRequest param = ElectionTaskRequest.newBuilder().
-                            term(currentTerm).
-                            candidateId(nodes.getSelf().getAdress()).
-                            lastLogIndex(LongConvert.convert(logModule.getLastIndex())).
-                            lastLogTerm(lastTerm).
-                            build();
+                                term(currentTerm).
+                                candidateId(nodes.getSelf().getAdress()).
+                                lastLogIndex(LongConvert.convert(logModule.getLastIndex())).
+                                lastLogTerm(lastTerm).
+                                build();
 
                         Request request = Request.newBuilder()
-                            .cmd(Request.REQ_VOTE)
-                            .obj(param)
-                            .url(peer.getAdress())
-                            .build();
+                                .cmd(Request.REQ_VOTE)
+                                .obj(param)
+                                .url(peer.getAdress())
+                                .build();
 
                         try {
                             @SuppressWarnings("unchecked")
                             Response<ElectionTaskResponse> response = getRaftRpcClient().send(request);
-                            System.out.println("vated:"+response.getResult().isVoteGranted()+"    "+peer.getAdress());
+                            System.out.println("vated:" + response.getResult().isVoteGranted() + "    " + peer.getAdress());
                             return response;
 
                         } catch (RaftRemotingException e) {
@@ -919,16 +944,16 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
             for (PeerNode peer : nodes.getPeersWithOutSelf()) {
 
                 LogTaskRequest param = LogTaskRequest.newBuilder()
-                    .entries(null)// 心跳,空日志.
-                    .leaderId(nodes.getSelf().getAdress())
-                    .serverId(peer.getAdress())
-                    .term(currentTerm)
-                    .build();
+                        .entries(null)// 心跳,空日志.
+                        .leaderId(nodes.getSelf().getAdress())
+                        .serverId(peer.getAdress())
+                        .term(currentTerm)
+                        .build();
 
                 Request<LogTaskRequest> request = new Request<>(
-                    Request.REQ_LOG,
-                    param,
-                    peer.getAdress());
+                        Request.REQ_LOG,
+                        param,
+                        peer.getAdress());
 
                 RaftThreadPool.execute(() -> {
                     try {

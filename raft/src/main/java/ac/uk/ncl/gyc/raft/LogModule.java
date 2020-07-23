@@ -3,9 +3,8 @@ package ac.uk.ncl.gyc.raft;
 import ac.uk.ncl.gyc.raft.entity.LogEntry;
 
 /**
- *
- * @see LogEntry
  * @author Yuchen Guo
+ * @see LogEntry
  */
 public interface LogModule {
 

@@ -6,6 +6,7 @@ public interface ClusterMembershipChanges {
 
     /**
      * 添加节点.
+     *
      * @param newNode
      * @return
      */
@@ -13,6 +14,7 @@ public interface ClusterMembershipChanges {
 
     /**
      * 删除节点.
+     *
      * @param oldNode
      * @return
      */

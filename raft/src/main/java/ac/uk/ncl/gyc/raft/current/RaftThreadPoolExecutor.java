@@ -14,7 +14,7 @@ public class RaftThreadPoolExecutor extends ThreadPoolExecutor {
     private static final ThreadLocal<Long> COST_TIME_WATCH = ThreadLocal.withInitial(System::currentTimeMillis);
 
     public RaftThreadPoolExecutor(int corePoolSize, int maximumPoolSize, long keepAliveTime, TimeUnit unit,
-        BlockingQueue<Runnable> workQueue, RaftThreadPool.NameThreadFactory nameThreadFactory) {
+                                  BlockingQueue<Runnable> workQueue, RaftThreadPool.NameThreadFactory nameThreadFactory) {
         super(corePoolSize, maximumPoolSize, keepAliveTime, unit, workQueue, nameThreadFactory);
     }
 

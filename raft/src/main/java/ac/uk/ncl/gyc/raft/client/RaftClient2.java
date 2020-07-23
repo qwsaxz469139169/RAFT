@@ -30,33 +30,31 @@ public class RaftClient2 {
     public static void main(String[] args) throws RemotingException, InterruptedException {
 
         AtomicLong count = new AtomicLong(3);
+        try {
+            int index = (int) (count.incrementAndGet() % nodelist.size());
+            req_address = nodelist.get(index);
+
+            ClientRequest obj = ClientRequest.newBuilder().key("hello:").value("world:").type(ClientRequest.PUT).build();
+
+            Request<ClientRequest> r = new Request<>();
+            r.setObj(obj);
+            r.setUrl(req_address);
+            r.setCmd(Request.REQ_CLIENT);
+
+            Response<ClientResponse> response;
+
             try {
-                int index = (int) (count.incrementAndGet() % nodelist.size());
-                req_address = nodelist.get(index);
-
-                ClientRequest obj = ClientRequest.newBuilder().key("hello:").value("world:").type(ClientRequest.PUT).build();
-
-                Request<ClientRequest> r = new Request<>();
-                r.setObj(obj);
-                r.setUrl(req_address);
-                r.setCmd(Request.REQ_CLIENT);
-
-                Response<ClientResponse> response;
-
-                try {
-                    response = client.send(r);
-                    ClientResponse clientResponse = response.getResult();
-                    LOGGER.info("request content : {}, extra message : {}, leader latency: {}, follower latency: {}", obj.key, clientResponse.getExtraMessageCount(),clientResponse.getLeaderLatency(),clientResponse.getFollowerLatency());
-
-                } catch (Exception e) {
-
-                }
+                response = client.send(r);
+                ClientResponse clientResponse = response.getResult();
+                LOGGER.info("request content : {}, extra message : {}, leader latency: {}, follower latency: {}", obj.key, clientResponse.getExtraMessageCount(), clientResponse.getLeaderLatency(), clientResponse.getFollowerLatency());
 
             } catch (Exception e) {
-                e.printStackTrace();
+
             }
 
-
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
 
 
     }

@@ -6,16 +6,18 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- *
  * 请求投票 RPC 返回值.
- *
  */
 public class ElectionTaskResponse implements Serializable {
 
-    /** 当前任期号，以便于候选人去更新自己的任期 */
+    /**
+     * 当前任期号，以便于候选人去更新自己的任期
+     */
     long term;
 
-    /** 候选人赢得了此张选票时为真 */
+    /**
+     * 候选人赢得了此张选票时为真
+     */
     boolean voteGranted;
 
     public ElectionTaskResponse(boolean voteGranted) {
@@ -54,8 +56,6 @@ public class ElectionTaskResponse implements Serializable {
     public static Builder newBuilder() {
         return new Builder();
     }
-
-
 
 
     public static final class Builder {

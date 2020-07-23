@@ -32,51 +32,50 @@ public class RaftClientTest {
         AtomicLong count = new AtomicLong(3);
 
         int message = 0;
-            for(int i=0;i<3;i++){
-                message = message+1;
-                int m = message;
-                int index = (int) (count.incrementAndGet() % nodelist.size());
-                String req_address = nodelist.get(index);
+        for (int i = 0; i < 3; i++) {
+            message = message + 1;
+            int m = message;
+            int index = (int) (count.incrementAndGet() % nodelist.size());
+            String req_address = nodelist.get(index);
 
-                RaftThreadPool.execute(new Runnable() {
-                    @Override
-                    public void run() {
+            RaftThreadPool.execute(new Runnable() {
+                @Override
+                public void run() {
 
-                        ClientRequest obj = ClientRequest.newBuilder().key("client1:"+m).value("world:").type(ClientRequest.PUT).build();
+                    ClientRequest obj = ClientRequest.newBuilder().key("client1:" + m).value("world:").type(ClientRequest.PUT).build();
 
-                        Request<ClientRequest> r = new Request<>();
-                        r.setObj(obj);
-                        r.setUrl(req_address);
-                        r.setCmd(Request.REQ_CLIENT);
+                    Request<ClientRequest> r = new Request<>();
+                    r.setObj(obj);
+                    r.setUrl(req_address);
+                    r.setCmd(Request.REQ_CLIENT);
 
-                        Response<ClientResponse> response;
+                    Response<ClientResponse> response;
 
-                        try {
-                            response = client.send(r);
-                            ClientResponse clientResponse = response.getResult();
+                    try {
+                        response = client.send(r);
+                        ClientResponse clientResponse = response.getResult();
 
-                            System.out.println(obj.key+" has been sent!");
-                            if(clientResponse.getMessages().size()>0){
-                                List<Message> mmmmm = clientResponse.getMessages();
+                        System.out.println(obj.key + " has been sent!");
+                        if (clientResponse.getMessages().size() > 0) {
+                            List<Message> mmmmm = clientResponse.getMessages();
 
-                                System.out.println(mmmmm.size()+" messages has been submit!");
-                                for(Message message1 : mmmmm){
-                                     messages.add(message1);
-                                    LOGGER.info("message : {}, leader latency: {}, follower latency: {}", message1.getMessage(), message1.getLeader_latency(),message1.getFollower_latency());
+                            System.out.println(mmmmm.size() + " messages has been submit!");
+                            for (Message message1 : mmmmm) {
+                                messages.add(message1);
+                                LOGGER.info("message : {}, leader latency: {}, follower latency: {}", message1.getMessage(), message1.getLeader_latency(), message1.getFollower_latency());
 
-                                }
                             }
-
-
-
-                        } catch (Exception e) {
-
                         }
-                    }
-                });
 
-            }
-            Thread.sleep(1000);
+
+                    } catch (Exception e) {
+
+                    }
+                }
+            });
+
+        }
+        Thread.sleep(1000);
 
 //
 //        String s = JSON.toJSONString(messages);
@@ -94,7 +93,6 @@ public class RaftClientTest {
 //            e.printStackTrace();
 //        }
         System.out.println("end");
-
 
 
     }

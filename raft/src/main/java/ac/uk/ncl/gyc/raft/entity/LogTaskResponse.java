@@ -9,7 +9,6 @@ import lombok.Setter;
 import lombok.ToString;
 
 /**
- *
  * 附加 RPC 日志返回值.
  *
  * @author Yuchen Guo
@@ -17,13 +16,17 @@ import lombok.ToString;
 
 public class LogTaskResponse implements Serializable {
 
-    /** 当前的任期号，用于领导人去更新自己 */
+    /**
+     * 当前的任期号，用于领导人去更新自己
+     */
     long term;
 
-    /** 跟随者包含了匹配上 prevLogIndex 和 prevLogTerm 的日志时为真  */
+    /**
+     * 跟随者包含了匹配上 prevLogIndex 和 prevLogTerm 的日志时为真
+     */
     boolean success;
 
-    Map<String,Long> committedList;
+    Map<String, Long> committedList;
 
     public LogTaskResponse(long term) {
         this.term = term;

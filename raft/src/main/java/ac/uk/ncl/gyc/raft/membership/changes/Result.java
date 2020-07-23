@@ -38,9 +38,9 @@ public class Result {
     @Override
     public String toString() {
         return "Result{" +
-            "status=" + status +
-            ", leaderHint='" + leaderHint + '\'' +
-            '}';
+                "status=" + status +
+                ", leaderHint='" + leaderHint + '\'' +
+                '}';
     }
 
     public static Builder newBuilder() {

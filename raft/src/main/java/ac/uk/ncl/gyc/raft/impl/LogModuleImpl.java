@@ -24,7 +24,9 @@ public class LogModuleImpl implements LogModule {
     private static final Logger LOGGER = LoggerFactory.getLogger(LogModuleImpl.class);
 
 
-    /** public just for test */
+    /**
+     * public just for test
+     */
     public static String dbDir;
     public static String logsDir;
 

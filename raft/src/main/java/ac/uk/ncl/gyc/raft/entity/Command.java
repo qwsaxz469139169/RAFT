@@ -50,7 +50,7 @@ public class Command implements Serializable {
         }
         Command command = (Command) o;
         return Objects.equals(key, command.key) &&
-            Objects.equals(value, command.value);
+                Objects.equals(value, command.value);
     }
 
     @Override

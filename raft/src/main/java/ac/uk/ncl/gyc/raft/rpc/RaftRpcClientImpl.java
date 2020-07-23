@@ -11,9 +11,10 @@ import ac.uk.ncl.gyc.raft.exception.RaftRemotingException;
 public class RaftRpcClientImpl implements RaftRpcClient {
 
     public static Logger logger = LoggerFactory
-        .getLogger(RaftRpcClientImpl.class.getName());
+            .getLogger(RaftRpcClientImpl.class.getName());
 
     private final static RpcClient CLIENT = new com.alipay.remoting.rpc.RpcClient();
+
     static {
         CLIENT.init();
     }

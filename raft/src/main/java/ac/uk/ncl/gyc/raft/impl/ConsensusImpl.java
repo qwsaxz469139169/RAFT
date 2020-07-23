@@ -36,10 +36,10 @@ public class ConsensusImpl implements Consensus {
 
     /**
      * 请求投票 RPC
-     *
+     * <p>
      * 接收者实现：
-     *      如果term < currentTerm返回 false （5.2 节）
-     *      如果 votedFor 为空或者就是 candidateId，并且候选人的日志至少和自己一样新，那么就投票给他（5.2 节，5.4 节）
+     * 如果term < currentTerm返回 false （5.2 节）
+     * 如果 votedFor 为空或者就是 candidateId，并且候选人的日志至少和自己一样新，那么就投票给他（5.2 节，5.4 节）
      */
     @Override
     public ElectionTaskResponse requestVote(ElectionTaskRequest param) {
@@ -93,13 +93,13 @@ public class ConsensusImpl implements Consensus {
 
     /**
      * 附加日志(多个日志,为了提高效率) RPC
-     *
+     * <p>
      * 接收者实现：
-     *    如果 term < currentTerm 就返回 false （5.1 节）
-     *    如果日志在 prevLogIndex 位置处的日志条目的任期号和 prevLogTerm 不匹配，则返回 false （5.3 节）
-     *    如果已经存在的日志条目和新的产生冲突（索引值相同但是任期号不同），删除这一条和之后所有的 （5.3 节）
-     *    附加任何在已有的日志中不存在的条目
-     *    如果 leaderCommit > commitIndex，令 commitIndex 等于 leaderCommit 和 新日志条目索引值中较小的一个
+     * 如果 term < currentTerm 就返回 false （5.1 节）
+     * 如果日志在 prevLogIndex 位置处的日志条目的任期号和 prevLogTerm 不匹配，则返回 false （5.3 节）
+     * 如果已经存在的日志条目和新的产生冲突（索引值相同但是任期号不同），删除这一条和之后所有的 （5.3 节）
+     * 附加任何在已有的日志中不存在的条目
+     * 如果 leaderCommit > commitIndex，令 commitIndex 等于 leaderCommit 和 新日志条目索引值中较小的一个
      */
     @Override
     public LogTaskResponse appendEntries(LogTaskRequest param) {
@@ -121,7 +121,7 @@ public class ConsensusImpl implements Consensus {
             // 够格
             if (param.getTerm() >= node.getCurrentTerm()) {
                 LOGGER.debug("node {} become FOLLOWER, currentTerm : {}, param Term : {}, param serverId",
-                    node.nodes.getSelf(), node.currentTerm, param.getTerm(), param.getServerId());
+                        node.nodes.getSelf(), node.currentTerm, param.getTerm(), param.getServerId());
                 // 认怂
                 node.status = NodeStatus.FOLLOWER;
             }
@@ -137,15 +137,15 @@ public class ConsensusImpl implements Consensus {
 
             String message = param.getEntries()[0].getMessage();
 
-            if(received.get(message)==null){
-                node.received.put(message,1L);
-                node.startTime.put(message,startTime);
+            if (received.get(message) == null) {
+                node.received.put(message, 1L);
+                node.startTime.put(message, startTime);
             }
 
             node.ACKS.add(message);
             // 真实日志
             // 第一次
-           if (node.getLogModule().getLastIndex() != 0 && param.getPrevLogIndex() != 0) {
+            if (node.getLogModule().getLastIndex() != 0 && param.getPrevLogIndex() != 0) {
                 LogEntry logEntry;
 
                 if ((logEntry = node.getLogModule().read(param.getPrevLogIndex())) != null) {
@@ -175,16 +175,16 @@ public class ConsensusImpl implements Consensus {
 
             // 写进日志并且应用到状态机
             for (LogEntry entry : param.getEntries()) {
-                System.out.println("The Message: "+entry.getMessage()+ "has been received(add to pendings)");
+                System.out.println("The Message: " + entry.getMessage() + "has been received(add to pendings)");
                 node.getLogModule().write(entry);
 //                node.stateMachine.apply(entry);
                 result.setSuccess(true);
             }
 
-            Map<String,Long> la = new HashMap<>();
-            for(String commit : param.getEntries()[0].getCommitList()){
-                System.out.println("The Message: "+commit+ "has been committed");
-                la.put(commit,System.currentTimeMillis()-node.startTime.get(commit));
+            Map<String, Long> la = new HashMap<>();
+            for (String commit : param.getEntries()[0].getCommitList()) {
+                System.out.println("The Message: " + commit + "has been committed");
+                la.put(commit, System.currentTimeMillis() - node.startTime.get(commit));
                 node.received.remove(commit);
                 node.startTime.remove(commit);
             }
@@ -210,22 +210,22 @@ public class ConsensusImpl implements Consensus {
     @Override
     public CommitResponse requestCommit(CommitRequest request) {
 
-            List<String> messages = request.getMessages();
-            Map<String,Long> la = new HashMap<>();
-            for(String message : messages){
-                System.out.println("The Message: "+message+ "has been committed");
-                la.put(message,System.currentTimeMillis()-node.startTime.get(message));
-                node.received.remove(message);
-                node.startTime.remove(message);
+        List<String> messages = request.getMessages();
+        Map<String, Long> la = new HashMap<>();
+        for (String message : messages) {
+            System.out.println("The Message: " + message + "has been committed");
+            la.put(message, System.currentTimeMillis() - node.startTime.get(message));
+            node.received.remove(message);
+            node.startTime.remove(message);
 
-            }
+        }
 
 
-            CommitResponse response = new CommitResponse();
-            response.setLatency(la);
-            response.setSuccess(true);
+        CommitResponse response = new CommitResponse();
+        response.setLatency(la);
+        response.setSuccess(true);
 
-            return  response;
+        return response;
 
     }
 

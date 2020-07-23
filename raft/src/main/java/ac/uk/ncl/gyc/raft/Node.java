@@ -9,10 +9,9 @@ import ac.uk.ncl.gyc.raft.client.ClientResponse;
 import ac.uk.ncl.gyc.raft.client.ClientRequest;
 
 /**
- *
  * @author Yuchen Guo
  */
-public interface Node<T> extends LifeCycle{
+public interface Node<T> extends LifeCycle {
 
     /**
      * 设置配置文件.
@@ -47,6 +46,7 @@ public interface Node<T> extends LifeCycle{
 
     /**
      * 转发给 leader 节点.
+     *
      * @param request
      * @return
      */

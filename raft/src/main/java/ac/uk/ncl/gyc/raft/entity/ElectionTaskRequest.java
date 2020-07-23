@@ -14,13 +14,19 @@ import lombok.Setter;
 @Setter
 public class ElectionTaskRequest extends BaseRequest {
 
-    /** 请求选票的候选人的 Id(ip:selfPort) */
+    /**
+     * 请求选票的候选人的 Id(ip:selfPort)
+     */
     String candidateId;
 
-    /** 候选人的最后日志条目的索引值 */
+    /**
+     * 候选人的最后日志条目的索引值
+     */
     long lastLogIndex;
 
-    /** 候选人最后日志条目的任期号  */
+    /**
+     * 候选人最后日志条目的任期号
+     */
     long lastLogTerm;
 
     private ElectionTaskRequest(Builder builder) {
@@ -58,12 +64,12 @@ public class ElectionTaskRequest extends BaseRequest {
     @Override
     public String toString() {
         return "ElectionTaskRequest{" +
-            "candidateId='" + candidateId + '\'' +
-            ", lastLogIndex=" + lastLogIndex +
-            ", lastLogTerm=" + lastLogTerm +
-            ", term=" + term +
-            ", serverId='" + serverId + '\'' +
-            '}';
+                "candidateId='" + candidateId + '\'' +
+                ", lastLogIndex=" + lastLogIndex +
+                ", lastLogTerm=" + lastLogTerm +
+                ", term=" + term +
+                ", serverId='" + serverId + '\'' +
+                '}';
     }
 
     public static Builder newBuilder() {

@@ -1,7 +1,6 @@
 package ac.uk.ncl.gyc.raft;
 
 /**
- *
  * @author Yuchen Guo
  */
 public interface LifeCycle {

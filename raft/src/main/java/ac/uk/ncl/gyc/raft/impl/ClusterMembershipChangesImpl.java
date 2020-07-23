@@ -22,8 +22,11 @@ public class ClusterMembershipChangesImpl implements ClusterMembershipChanges {
         this.node = node;
     }
 
-    /** 必须是同步的,一次只能添加一个节点
-     * @param newNode*/
+    /**
+     * 必须是同步的,一次只能添加一个节点
+     *
+     * @param newNode
+     */
     @Override
     public synchronized Result addNode(PeerNode newNode) {
         // 已经存在
@@ -47,10 +50,10 @@ public class ClusterMembershipChangesImpl implements ClusterMembershipChanges {
             for (PeerNode item : node.nodes.getPeersWithOutSelf()) {
                 // TODO 同步到其他节点.
                 Request request = Request.newBuilder()
-                    .cmd(Request.CHANGE_CONFIG_ADD)
-                    .url(newNode.getAdress())
-                    .obj(newNode)
-                    .build();
+                        .cmd(Request.CHANGE_CONFIG_ADD)
+                        .url(newNode.getAdress())
+                        .obj(newNode)
+                        .build();
 
                 Response response = node.raftRpcClient.send(request);
                 Result result = (Result) response.getResult();
@@ -67,8 +70,11 @@ public class ClusterMembershipChangesImpl implements ClusterMembershipChanges {
     }
 
 
-    /** 必须是同步的,一次只能删除一个节点
-     * @param oldNode*/
+    /**
+     * 必须是同步的,一次只能删除一个节点
+     *
+     * @param oldNode
+     */
     @Override
     public synchronized Result removeNode(PeerNode oldNode) {
         node.nodes.getPeersWithOutSelf().remove(oldNode);

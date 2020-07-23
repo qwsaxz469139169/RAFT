@@ -77,7 +77,7 @@ public class ClientRequest implements Serializable {
             this.code = code;
         }
 
-        public static Type value(int code ) {
+        public static Type value(int code) {
             for (Type type : values()) {
                 if (type.code == code) {
                     return type;

@@ -8,10 +8,14 @@ import lombok.ToString;
 
 public class NodesConfigration {
 
-    /** 自身 selfPort */
+    /**
+     * 自身 selfPort
+     */
     public int selfPort;
 
-    /** 所有节点地址. */
+    /**
+     * 所有节点地址.
+     */
     public List<String> peerAddrs;
 
     public int getSelfPort() {

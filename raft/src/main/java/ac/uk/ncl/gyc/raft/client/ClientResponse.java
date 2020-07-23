@@ -13,9 +13,9 @@ public class ClientResponse implements Serializable {
 
     int message_count;
 
-    Map<String,Long> leaderLatency;
+    Map<String, Long> leaderLatency;
 
-    Map<String,Long> followerLatency;
+    Map<String, Long> followerLatency;
 
     List<Message> messages;
 
@@ -35,19 +35,19 @@ public class ClientResponse implements Serializable {
         this.message_count = message_count;
     }
 
-    public Map<String,Long> getLeaderLatency() {
+    public Map<String, Long> getLeaderLatency() {
         return leaderLatency;
     }
 
-    public void setLeaderLatency(Map<String,Long> leaderLatency) {
+    public void setLeaderLatency(Map<String, Long> leaderLatency) {
         this.leaderLatency = leaderLatency;
     }
 
-    public Map<String,Long> getFollowerLatency() {
+    public Map<String, Long> getFollowerLatency() {
         return followerLatency;
     }
 
-    public void setFollowerLatency(Map<String,Long> followerLatency) {
+    public void setFollowerLatency(Map<String, Long> followerLatency) {
         this.followerLatency = followerLatency;
     }
 

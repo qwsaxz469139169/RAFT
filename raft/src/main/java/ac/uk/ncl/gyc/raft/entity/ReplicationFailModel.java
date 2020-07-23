@@ -5,7 +5,6 @@ import java.util.concurrent.Callable;
 import ac.uk.ncl.gyc.raft.common.PeerNode;
 
 /**
- *
  * @author Yuchen Guo
  */
 public class ReplicationFailModel {
