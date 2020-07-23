@@ -90,7 +90,7 @@ public class PiggRaftClient2 {
 //
         String s = JSON.toJSONString(messages);
         FileWriter fw = null;
-        File f = new File("D:/piggRaft2.txt");
+        File f = new File("D:/_case3Raft2.txt");
         try {
             if(!f.exists()){
                 f.createNewFile();
