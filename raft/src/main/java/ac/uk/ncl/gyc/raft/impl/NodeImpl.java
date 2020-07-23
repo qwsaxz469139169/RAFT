@@ -1,10 +1,6 @@
 package ac.uk.ncl.gyc.raft.impl;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 import java.util.concurrent.Callable;
 import java.util.concurrent.CancellationException;
 import java.util.concurrent.ConcurrentHashMap;
@@ -18,6 +14,7 @@ import java.util.concurrent.TimeoutException;
 import java.util.concurrent.atomic.AtomicInteger;
 
 import ac.uk.ncl.gyc.raft.LogModule;
+import ac.uk.ncl.gyc.raft.client.Message;
 import ac.uk.ncl.gyc.raft.common.PeerNode;
 import ac.uk.ncl.gyc.raft.entity.*;
 import ac.uk.ncl.gyc.raft.rpc.RaftRpcClient;
@@ -135,9 +132,18 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
 
 
     /* ============================== */
-    public static Map<String,AtomicInteger> extraM = new ConcurrentHashMap();
 
     public static Map<String,CopyOnWriteArrayList<Long>> latencyMap= new ConcurrentHashMap();
+
+    public static Map<String,Boolean> isRedirect= new ConcurrentHashMap();
+
+    public static Map<String,Long> leader_latencyMap= new ConcurrentHashMap();
+
+    public static CopyOnWriteArrayList<String> ACKS = new CopyOnWriteArrayList<>();
+
+    public static Map<String,Integer> LEADER_ACKS= new ConcurrentHashMap();
+
+
 
     private NodeImpl() {
     }
@@ -253,16 +259,38 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
         if (status != LEADER) {
             LOGGER.warn("Current node is not Leader , redirect to leader node, leader addr : {}, my addr : {}",
                 nodes.getLeader(), nodes.getSelf().getAdress());
+
+            try {
+                Thread.sleep(2);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
+            System.out.println("cur redirect contain ack count: "+ ACKS.size());
+            if (ACKS.size() > 0) {
+                List<String> ac = new ArrayList<>();
+                for(String a : ACKS){
+                    ac.add(a);
+                    ACKS.remove(a);
+                }
+                request.setAcks(ac);
+            }
+
+            received.put(request.getKey(),1L);
+            startTime.put(request.getKey(),receiveTime);
+
             request.setRedirect(true);
             return redirect(request);
         }
 
         //record extra messages
-        if(status == LEADER && extraM.get(request.getKey())==null){
+        if(status == LEADER ){
             if(request.isRedirect()){
-                extraM.put(request.getKey(),new AtomicInteger(1));
+                leader_latencyMap.put(request.getKey(),receiveTime-2);
+                isRedirect.put(request.getKey(),true);
             }else {
-                extraM.put(request.getKey(),new AtomicInteger(0));
+                leader_latencyMap.put(request.getKey(),receiveTime);
+                isRedirect.put(request.getKey(),false);
             }
 
             latencyMap.put(request.getKey(),new CopyOnWriteArrayList<>());
@@ -277,6 +305,31 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
             }
             return new ClientResponse(null);
         }
+        try {
+            Thread.sleep(2);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+
+        List<String> commitList = new ArrayList<>();
+        if( request.getAcks()!=null){
+            System.out.println("cur receive ack count: "+ request.getAcks().size());
+            for(String ack : request.getAcks()){
+                if(LEADER_ACKS.get(ack)!=null){
+                    int ack_cout = LEADER_ACKS.get(ack);
+                    LEADER_ACKS.put(ack,ack_cout+1);
+                    commitList.add(ack);
+                    LEADER_ACKS.remove(ack);
+                }else{
+                    LEADER_ACKS.put(ack,1);
+                }
+            }
+        }else{
+            System.out.println("cur receive ack count: 0 ");
+        }
+        System.out.println("cur pre commit message count: "+commitList.size());
+
+
         LogEntry logEntry = new LogEntry();
         logEntry.setTerm(currentTerm);
         logEntry.setMessage(request.getKey());
@@ -286,16 +339,15 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
                 value(request.getValue()).
                 build());
 
+        logEntry.setCommitList(commitList);
+
         // 预提交到本地日志, TODO 预提交
         logModule.write(logEntry);
 
 
-        LOGGER.info("write logModule success, logEntry info : {}, log index : {}", logEntry, logEntry.getIndex());
-
         final AtomicInteger success = new AtomicInteger(0);
 
         List<Future<Boolean>> futureList = new CopyOnWriteArrayList<>();
-
         int count = 0;
         //  复制到其他机器
         for (PeerNode peer : nodes.getPeersWithOutSelf()) {
@@ -321,7 +373,6 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
                 success.incrementAndGet();
             }
         }
-
         // 如果存在一个满足N > commitIndex的 N，并且大多数的matchIndex[i] ≥ N成立，
         // 并且log[N].term == currentTerm成立，那么令 commitIndex 等于这个 N （5.3 和 5.4 节）
         List<Long> matchIndexList = new ArrayList<>(matchIndexs.values());
@@ -338,61 +389,47 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
                 commitIndex = N;
             }
         }
-
-        //  响应客户端(成功一半)
-        if (success.get() >= count) {
-            long latency = System.currentTimeMillis() - logEntry.getStartTime();
-            boolean reqCommit = ReqCommit(logEntry);
-
-            if(reqCommit==true){
-                // 更新
-                commitIndex = logEntry.getIndex();
-                //  应用到状态机
-                getStateMachine().apply(logEntry);
-                lastApplied = commitIndex;
-
-                LOGGER.info("success apply local state machine,  logEntry info : {}", logEntry);
-
-
-                long followerLatency = 0;
-
-                for(long a :latencyMap.get(request.getKey())){
-                    followerLatency = followerLatency+a;
+        if (success.get() >= count){
+            commitIndex = logEntry.getIndex();
+            //  应用到状态机
+            getStateMachine().apply(logEntry);
+            lastApplied = commitIndex;
+            List<Message> mess = new ArrayList<>();
+            System.out.println("response client, committed message count: "+commitList.size());
+            if(commitList.size()>0){
+                for(String M_NAME : commitList){
+                    System.out.println(" committed message: "+M_NAME);
+                    long followerLatency2 = 0;
+                    long leaderLatency2 = System.currentTimeMillis() - leader_latencyMap.get(M_NAME);
+                    System.out.println(" leader_latencyMap.get(M_NAME): "+ leader_latencyMap.get(M_NAME));
+                    System.out.println(" leaderLatency2: "+ leaderLatency2);
+                    for(long a :latencyMap.get(M_NAME)){
+                        System.out.println(" a: "+ a);
+                        followerLatency2 = followerLatency2+a;
+                    }
+                    followerLatency2 = followerLatency2/latencyMap.get(M_NAME).size();
+                    System.out.println(" followerLatency2: "+ followerLatency2);
+                    Message m = new Message(M_NAME, leaderLatency2, followerLatency2);
+                    mess.add(m);
+                    latencyMap.remove(M_NAME);
+                    leader_latencyMap.remove(M_NAME);
                 }
-                followerLatency = followerLatency/latencyMap.get(request.getKey()).size();
-                // 返回成功.
-                AtomicInteger extraMCount = extraM.get(request.getKey());
-
-                ClientResponse clientResponse = new ClientResponse();
-
-                if(request.isRedirect()){
-                    clientResponse.setExtraMessageCount(7);
-                }else {
-                    clientResponse.setExtraMessageCount(6);
-                }
-//                clientResponse.setExtraMessageCount(extraMCount.get());
-                clientResponse.setLeaderLatency(latency);
-                clientResponse.setFollowerLatency(followerLatency);
-                clientResponse.setResult("ok");
-
-                extraM.remove(request.getKey());
-
-                return clientResponse;
-            }else{
-                return ClientResponse.fail();
             }
+            ClientResponse clientResponse = new ClientResponse();
+            clientResponse.setMessages(mess);
+            clientResponse.setResult("ok");
+            return clientResponse;
 
-
-        } else {
-            logModule.removeOnStartIndex(logEntry.getIndex());
-            LOGGER.warn("fail apply local state  machine,  logEntry info : {}", logEntry);
-            // TODO 不应用到状态机,但已经记录到日志中.由定时任务从重试队列取出,然后重复尝试,当达到条件时,应用到状态机.
-            // 这里应该返回错误, 因为没有成功复制过半机器.
-            return ClientResponse.fail();
+        }else {
+            return ClientResponse.ok();
         }
+
+
+
+
     }
 
-    private boolean ReqCommit(LogEntry logEntry){
+    private boolean ReqCommit(List<String> commitList){
         final AtomicInteger success = new AtomicInteger(0);
 
         List<Future<Boolean>> futureList = new CopyOnWriteArrayList<>();
@@ -403,7 +440,7 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
             // TODO check self and RaftThreadPool
             count++;
 
-            futureList.add(Commit(peer,logEntry));
+            futureList.add(Commit(peer,commitList));
         }
 
         CountDownLatch latch = new CountDownLatch(futureList.size());
@@ -429,7 +466,7 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
         }
     }
 
-    public Future<Boolean> Commit(PeerNode peer, LogEntry logEntry) {
+    public Future<Boolean> Commit(PeerNode peer, List<String> commitList) {
 
         return RaftThreadPool.submit(new Callable() {
             @Override
@@ -439,13 +476,12 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
 
                 // 20 秒重试时间
                 while (end - start < 20 * 1000L) {
-                    String key = logEntry.getMessage();
+                    String key = "";
 
                     CommitRequest commitRequest = new CommitRequest();
-                    commitRequest.setMessage(logEntry.getMessage());
                     commitRequest.setTerm(currentTerm);
                     commitRequest.setServerId(peer.getAdress());
-                    commitRequest.setLogEntry(logEntry);
+                    commitRequest.setMessages(commitList);
 
                     Request request = Request.newBuilder()
                             .cmd(Request.REQ_COMMIT)
@@ -453,9 +489,6 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
                             .url(peer.getAdress())
                             .build();
 
-                    AtomicInteger extraMCount = extraM.get(key);
-                    extraMCount.incrementAndGet();
-                    extraM.put(key,extraMCount);
 
                     try {
                         Response response = getRaftRpcClient().send(request);
@@ -467,9 +500,14 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
                         if (result != null && result.isSuccess()) {
                             LOGGER.info("commit success , follower=[{}], entry=[{}]", peer, key);
 
-                            CopyOnWriteArrayList<Long> latencyList = latencyMap.get(key);
-                            latencyList.add(result.getLatency());
-                            latencyMap.put(key,latencyList);
+                            Map<String, Long> lMap = result.getLatency();
+
+                            for(String mName : lMap.keySet()){
+                                CopyOnWriteArrayList<Long> latencyList = latencyMap.get(mName);
+                                latencyList.add(lMap.get(mName));
+                                latencyMap.put(mName,latencyList);
+                            }
+
 
                             return true;
                         }
@@ -515,9 +553,6 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
 
                 long start = System.currentTimeMillis(), end = start;
 
-                // 20 秒重试时间
-                while (end - start < 20 * 1000L) {
-
                     LogTaskRequest logTaskRequest = new LogTaskRequest();
                     logTaskRequest.setTerm(currentTerm);
                     logTaskRequest.setServerId(peer.getAdress());
@@ -546,14 +581,11 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
                     logTaskRequest.setEntries(logEntries.toArray(new LogEntry[0]));
 
                     Request request = Request.newBuilder()
-                        .cmd(Request.REQ_LOG)
-                        .obj(logTaskRequest)
-                        .url(peer.getAdress())
-                        .build();
+                            .cmd(Request.REQ_LOG)
+                            .obj(logTaskRequest)
+                            .url(peer.getAdress())
+                            .build();
 
-                    AtomicInteger extraMCount = extraM.get(entry.getCommand().getKey());
-                    extraMCount.incrementAndGet();
-                    extraM.put(entry.getCommand().getKey(),extraMCount);
 
 
                     try {
@@ -567,15 +599,23 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
                             // update 这两个追踪值
                             nextIndexs.put(peer, entry.getIndex() + 1);
                             matchIndexs.put(peer, entry.getIndex());
-                            AtomicInteger mm = extraM.get(entry.getCommand().getKey());
-                            mm.incrementAndGet();
-                            extraM.put(entry.getCommand().getKey(),mm);
+
+                            Map<String, Long> lMap = result.getCommittedList();
+
+                            for(Map.Entry<String, Long> entry1 : lMap.entrySet()){
+                                String mName = entry1.getKey();
+                                long latency =entry1.getValue();
+                                CopyOnWriteArrayList<Long> latencyList = latencyMap.get(mName);
+                                latencyList.add(latency);
+                                latencyMap.put(mName,latencyList);
+                            }
+
                             return true;
                         } else if (result != null) {
                             // 对方比我大
                             if (result.getTerm() > currentTerm) {
                                 LOGGER.warn("follower [{}] term [{}] than more self, and my term = [{}], so, I will become follower",
-                                    peer, result.getTerm(), currentTerm);
+                                        peer, result.getTerm(), currentTerm);
                                 currentTerm = result.getTerm();
                                 // 认怂, 变成跟随者
                                 status = NodeStatus.FOLLOWER;
@@ -588,7 +628,7 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
                                 }
                                 nextIndexs.put(peer, nextIndex - 1);
                                 LOGGER.warn("follower {} nextIndex not match, will reduce nextIndex and retry RPC append, nextIndex : [{}]", peer.getAdress(),
-                                    nextIndex);
+                                        nextIndex);
                                 // 重来, 直到成功.
                             }
                         }
@@ -607,7 +647,7 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
 //                        replicationFailQueue.offer(model);
                         return false;
                     }
-                }
+
                 // 超时了,没办法了
                 return false;
             }

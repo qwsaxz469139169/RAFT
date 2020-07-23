@@ -1,6 +1,7 @@
 package ac.uk.ncl.gyc.raft.entity;
 
 import java.io.Serializable;
+import java.util.List;
 import java.util.Objects;
 
 import ac.uk.ncl.gyc.raft.LogModule;
@@ -19,7 +20,17 @@ public class LogEntry implements Serializable, Comparable {
 
     private long startTime;
 
+    private List<String> commitList;
+
     public LogEntry() {
+    }
+
+    public List<String> getCommitList() {
+        return commitList;
+    }
+
+    public void setCommitList(List<String> commitList) {
+        this.commitList = commitList;
     }
 
     public String getMessage() {

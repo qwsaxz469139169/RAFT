@@ -1,5 +1,9 @@
 package ac.uk.ncl.gyc.raft.impl;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.ReentrantLock;
 
 import ac.uk.ncl.gyc.raft.Consensus;
@@ -102,9 +106,7 @@ public class ConsensusImpl implements Consensus {
         LogTaskResponse result = LogTaskResponse.fail();
         long startTime = System.currentTimeMillis();
         try {
-            if (!appendLock.tryLock()) {
-                return result;
-            }
+            appendLock.lock();
 
             result.setTerm(node.getCurrentTerm());
             // 不够格
@@ -134,24 +136,27 @@ public class ConsensusImpl implements Consensus {
             }
 
             String message = param.getEntries()[0].getMessage();
-            if(node.received.get(message)==null){
+
+            if(received.get(message)==null){
                 node.received.put(message,1L);
                 node.startTime.put(message,startTime);
             }
+
+            node.ACKS.add(message);
             // 真实日志
             // 第一次
-            if (node.getLogModule().getLastIndex() != 0 && param.getPrevLogIndex() != 0) {
+           if (node.getLogModule().getLastIndex() != 0 && param.getPrevLogIndex() != 0) {
                 LogEntry logEntry;
 
                 if ((logEntry = node.getLogModule().read(param.getPrevLogIndex())) != null) {
                     // 如果日志在 prevLogIndex 位置处的日志条目的任期号和 prevLogTerm 不匹配，则返回 false
                     // 需要减小 nextIndex 重试.
                     if (logEntry.getTerm() != param.getPreLogTerm()) {
-                        return result;
+//                        return result;
                     }
                 } else {
                     // index 不对, 需要递减 nextIndex 重试.
-                    return result;
+//                    return result;
                 }
 
             }
@@ -164,16 +169,26 @@ public class ConsensusImpl implements Consensus {
                 node.getLogModule().removeOnStartIndex(param.getPrevLogIndex() + 1);
             } else if (existLog != null) {
                 // 已经有日志了, 不能重复写入.
-                result.setSuccess(true);
-                return result;
+//                result.setSuccess(true);
+//                return result;
             }
 
             // 写进日志并且应用到状态机
             for (LogEntry entry : param.getEntries()) {
+                System.out.println("The Message: "+entry.getMessage()+ "has been received(add to pendings)");
                 node.getLogModule().write(entry);
-                node.stateMachine.apply(entry);
+//                node.stateMachine.apply(entry);
                 result.setSuccess(true);
             }
+
+            Map<String,Long> la = new HashMap<>();
+            for(String commit : param.getEntries()[0].getCommitList()){
+                System.out.println("The Message: "+commit+ "has been committed");
+                la.put(commit,System.currentTimeMillis()-node.startTime.get(commit));
+                node.received.remove(commit);
+                node.startTime.remove(commit);
+            }
+            result.setCommittedList(la);
 
             //如果 leaderCommit > commitIndex，令 commitIndex 等于 leaderCommit 和 新日志条目索引值中较小的一个
             if (param.getLeaderCommit() > node.getCommitIndex()) {
@@ -195,15 +210,21 @@ public class ConsensusImpl implements Consensus {
     @Override
     public CommitResponse requestCommit(CommitRequest request) {
 
-            String key = request.getMessage();
-            System.out.println("The Message: "+key+ "has been committed");
+            List<String> messages = request.getMessages();
+            Map<String,Long> la = new HashMap<>();
+            for(String message : messages){
+                System.out.println("The Message: "+message+ "has been committed");
+                la.put(message,System.currentTimeMillis()-node.startTime.get(message));
+                node.received.remove(message);
+                node.startTime.remove(message);
+
+            }
+
 
             CommitResponse response = new CommitResponse();
-            response.setLatency(System.currentTimeMillis() - node.startTime.get(key));
+            response.setLatency(la);
             response.setSuccess(true);
 
-            node.received.remove(key);
-            node.startTime.remove(key);
             return  response;
 
     }

@@ -1,6 +1,8 @@
 package ac.uk.ncl.gyc.raft.entity;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -21,6 +23,8 @@ public class LogTaskResponse implements Serializable {
     /** 跟随者包含了匹配上 prevLogIndex 和 prevLogTerm 的日志时为真  */
     boolean success;
 
+    Map<String,Long> committedList;
+
     public LogTaskResponse(long term) {
         this.term = term;
     }
@@ -37,6 +41,15 @@ public class LogTaskResponse implements Serializable {
     private LogTaskResponse(Builder builder) {
         setTerm(builder.term);
         setSuccess(builder.success);
+    }
+
+
+    public Map<String, Long> getCommittedList() {
+        return committedList;
+    }
+
+    public void setCommittedList(Map<String, Long> committedList) {
+        this.committedList = committedList;
     }
 
     public long getTerm() {

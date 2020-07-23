@@ -1,8 +1,10 @@
 package ac.uk.ncl.gyc.raft.client;
 
 import java.io.Serializable;
+import java.util.List;
 
 public class ClientRequest implements Serializable {
+
 
     public static int PUT = 0;
     public static int GET = 1;
@@ -15,10 +17,20 @@ public class ClientRequest implements Serializable {
 
     boolean isRedirect;
 
+    List<String> acks;
+
     private ClientRequest(Builder builder) {
         setType(builder.type);
         setKey(builder.key);
         setValue(builder.value);
+    }
+
+    public List<String> getAcks() {
+        return acks;
+    }
+
+    public void setAcks(List<String> acks) {
+        this.acks = acks;
     }
 
     public boolean isRedirect() {

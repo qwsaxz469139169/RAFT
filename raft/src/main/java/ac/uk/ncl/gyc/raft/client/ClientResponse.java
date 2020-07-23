@@ -1,30 +1,53 @@
 package ac.uk.ncl.gyc.raft.client;
 
 import java.io.Serializable;
+import java.util.List;
+import java.util.Map;
 
 public class ClientResponse implements Serializable {
 
     Object result;
 
+
     int extraMessageCount;
 
-    long leaderLatency;
+    int message_count;
 
-    long followerLatency;
+    Map<String,Long> leaderLatency;
 
-    public long getLeaderLatency() {
+    Map<String,Long> followerLatency;
+
+    List<Message> messages;
+
+    public List<Message> getMessages() {
+        return messages;
+    }
+
+    public void setMessages(List<Message> messages) {
+        this.messages = messages;
+    }
+
+    public int getMessage_count() {
+        return message_count;
+    }
+
+    public void setMessage_count(int message_count) {
+        this.message_count = message_count;
+    }
+
+    public Map<String,Long> getLeaderLatency() {
         return leaderLatency;
     }
 
-    public void setLeaderLatency(long leaderLatency) {
+    public void setLeaderLatency(Map<String,Long> leaderLatency) {
         this.leaderLatency = leaderLatency;
     }
 
-    public long getFollowerLatency() {
+    public Map<String,Long> getFollowerLatency() {
         return followerLatency;
     }
 
-    public void setFollowerLatency(long followerLatency) {
+    public void setFollowerLatency(Map<String,Long> followerLatency) {
         this.followerLatency = followerLatency;
     }
 
