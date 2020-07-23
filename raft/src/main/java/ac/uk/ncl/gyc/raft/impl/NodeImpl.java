@@ -195,7 +195,7 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
             PeerNode peer = new PeerNode(s);
             nodes.addPeer(peer);
             
-            if (s.equals("localhost:" + config.getSelfPort())) {
+            if (s.equals("100.70.49.128:" + config.getSelfPort())) {
                 System.out.println("设置自身IP：" +s);
                 nodes.setSelf(peer);
             }
@@ -253,6 +253,8 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
         if (status != LEADER) {
             LOGGER.warn("Current node is not Leader , redirect to leader node, leader addr : {}, my addr : {}",
                 nodes.getLeader(), nodes.getSelf().getAdress());
+            received.put(request.getKey(),1L);
+            startTime.put(request.getKey(),receiveTime);
             request.setRedirect(true);
             return redirect(request);
         }

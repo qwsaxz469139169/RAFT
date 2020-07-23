@@ -1,8 +1,6 @@
 package ac.uk.ncl.gyc.raft.client;
 
 import ac.uk.ncl.gyc.raft.current.RaftThreadPool;
-import ac.uk.ncl.gyc.raft.current.SleepHelper;
-import ac.uk.ncl.gyc.raft.entity.LogEntry;
 import ac.uk.ncl.gyc.raft.rpc.RaftRpcClient;
 import ac.uk.ncl.gyc.raft.rpc.RaftRpcClientImpl;
 import ac.uk.ncl.gyc.raft.rpc.Request;
@@ -17,15 +15,15 @@ import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * Created by GYC on 2020/6/2.
  */
-public class RaftClient3 {
+public class RaftClient3aaaa2 {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(RaftClient2.class);
 
@@ -37,20 +35,19 @@ public class RaftClient3 {
     public static void main(String[] args) throws RemotingException, InterruptedException {
 
         AtomicLong count = new AtomicLong(3);
-
+        AtomicInteger MINDEX = new AtomicInteger(0);
         int message = 0;
         for(int j =0; j<600; j++){
-            for(int i=0;i<150;i++){
-                message = message+1;
-                int m = message;
-                int index = (int) (count.incrementAndGet() % nodelist.size());
-                String req_address = nodelist.get(index);
 
-                RaftThreadPool.execute(new Runnable() {
-                    @Override
-                    public void run() {
+            RaftThreadPool.execute(new Runnable() {
+                @Override
+                public void run() {
+                    for (int i = 0; i < 150; i++) {
+                       int m = MINDEX.addAndGet(1);
+                        int index = (int) (count.incrementAndGet() % nodelist.size());
+                        String req_address = nodelist.get(index);
 
-                        ClientRequest obj = ClientRequest.newBuilder().key("client1:"+m).value("world:").type(ClientRequest.PUT).build();
+                        ClientRequest obj = ClientRequest.newBuilder().key("client2:" + m ).value("world:").type(ClientRequest.PUT).build();
 
                         Request<ClientRequest> r = new Request<>();
                         r.setObj(obj);
@@ -62,24 +59,25 @@ public class RaftClient3 {
                         try {
                             response = client.send(r);
                             ClientResponse clientResponse = response.getResult();
-                            LOGGER.info("request content : {}, extra message : {}, leader latency: {}, follower latency: {}", obj.key, clientResponse.getExtraMessageCount(),clientResponse.getLeaderLatency(),clientResponse.getFollowerLatency());
+                            LOGGER.info("request content : {}, extra message : {}, leader latency: {}, follower latency: {}", obj.key, clientResponse.getExtraMessageCount(), clientResponse.getLeaderLatency(), clientResponse.getFollowerLatency());
                             Message message1 = new Message(obj.key, clientResponse.getExtraMessageCount(), clientResponse.getLeaderLatency(), clientResponse.getFollowerLatency());
                             messages.add(message1);
 
                         } catch (Exception e) {
 
                         }
-                    }
-                });
 
-            }
+
+                    }
+                }
+            });
             Thread.sleep(1000);
         }
-Thread.sleep(20000);
+        Thread.sleep(20000);
 
         String s = JSON.toJSONString(messages);
         FileWriter fw = null;
-        File f = new File("D:/0.75_case1Raft1.txt");
+        File f = new File("D:/0.75_case1Raft2.txt");
         try {
             if(!f.exists()){
                 f.createNewFile();
