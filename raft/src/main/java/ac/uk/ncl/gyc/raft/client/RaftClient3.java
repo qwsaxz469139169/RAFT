@@ -88,7 +88,7 @@ public class RaftClient3 {
            }
             Thread.sleep(1000);
         }
-
+        Thread.sleep(20000);
 
         String s = JSON.toJSONString(messages);
         FileWriter fw = null;

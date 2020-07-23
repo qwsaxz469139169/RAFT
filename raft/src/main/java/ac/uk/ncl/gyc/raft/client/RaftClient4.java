@@ -87,7 +87,7 @@ public class RaftClient4 {
             Thread.sleep(1000);
         }
 
-
+        Thread.sleep(20000);
         String s = JSON.toJSONString(messages);
         FileWriter fw = null;
         File f = new File("D:/5_case2Raft1.txt");
