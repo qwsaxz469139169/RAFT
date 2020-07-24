@@ -12,9 +12,9 @@ import java.util.concurrent.TimeUnit;
 public class RaftThreadPool {
 
     private static int cup = Runtime.getRuntime().availableProcessors();
-    private static int maxPoolSize = cup * 2;
-    private static final int queueSize = 1024;
-    private static final long keepTime = 1000 * 60;
+    private static int maxPoolSize = cup * 4 ;
+    private static final int queueSize = 10000;
+    private static final long keepTime = 1000 * 600;
     private static TimeUnit keepTimeUnit = TimeUnit.MILLISECONDS;
 
     private static ScheduledExecutorService ss = getScheduled();

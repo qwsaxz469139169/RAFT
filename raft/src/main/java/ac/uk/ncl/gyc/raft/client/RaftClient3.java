@@ -39,8 +39,8 @@ public class RaftClient3 {
         AtomicLong count = new AtomicLong(3);
 
         int message = 0;
-        for(int j =0; j<1200; j++){
-            for(int i=0;i<5;i++){
+        for(int j =0; j<600; j++){
+            for(int i=0;i<150;i++){
                 message = message+1;
                 int m = message;
                 int index = (int) (count.incrementAndGet() % nodelist.size());
@@ -50,7 +50,7 @@ public class RaftClient3 {
                     @Override
                     public void run() {
 
-                        ClientRequest obj = ClientRequest.newBuilder().key("client1:"+m).value("world:").type(ClientRequest.PUT).build();
+                        ClientRequest obj = ClientRequest.newBuilder().key("client3:"+m).value("world:").type(ClientRequest.PUT).build();
 
                         Request<ClientRequest> r = new Request<>();
                         r.setObj(obj);
@@ -79,7 +79,7 @@ Thread.sleep(20000);
 
         String s = JSON.toJSONString(messages);
         FileWriter fw = null;
-        File f = new File("D:/_case1Raft1.txt");
+        File f = new File("D:/gyc/0.75_case1Raft3.txt");
         try {
             if(!f.exists()){
                 f.createNewFile();
