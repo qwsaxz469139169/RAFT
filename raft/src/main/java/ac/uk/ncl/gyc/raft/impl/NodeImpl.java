@@ -183,12 +183,12 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
 
             consensus = new ConsensusImpl(this);
             cluster = new ClusterMembershipChangesImpl(this);
-//            RaftThreadPool.execute(piggybackingTask);
+//            CCThreadPool.execute(piggybackingTask);
 
             RaftThreadPool.scheduleWithFixedDelay(heartBeatTask, 500);
 
             RaftThreadPool.scheduleAtFixedRate(electionTask, 6000, 500);
-//            RaftThreadPool.scheduleWithFixedDelay(piggybackingTask, 2);
+//            CCThreadPool.scheduleWithFixedDelay(piggybackingTask, 2);
             RaftThreadPool.execute(replicationFailQueueConsumer);
 
 
@@ -215,7 +215,7 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
             PeerNode peer = new PeerNode(s);
             nodes.addPeer(peer);
             
-            if (s.equals("100.70.48.24:" + config.getSelfPort())) {
+            if (s.equals("100.70.49.128:" + config.getSelfPort())) {
                 System.out.println("设置自身IP：" +s);
                 nodes.setSelf(peer);
             }
@@ -262,6 +262,7 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
         if (status != LEADER) {
             LOGGER.warn("Current node is not Leader , redirect to leader node, leader addr : {}, my addr : {}",
                     nodes.getLeader(), nodes.getSelf().getAdress());
+            ;
             request.setRedirect(true);
             return redirect(request);
         }
@@ -347,7 +348,7 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
 //
 //                final CopyOnWriteArrayList<PiggybackingLog> log_list = req_list;
 //
-//                RaftThreadPool.execute(new Runnable() {
+//                CCThreadPool.execute(new Runnable() {
 //
 //                    @Override
 //                    public void run() {
@@ -450,6 +451,8 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
         if (status != LEADER) {
             LOGGER.warn("Current node is not Leader , redirect to leader node, leader addr : {}, my addr : {}",
                     nodes.getLeader(), nodes.getSelf().getAdress());
+            received.put(request.getKey(),1L);
+            startTime.put(request.getKey(),receiveTime);
             request.setRedirect(true);
             return redirect(request);
         }
@@ -581,7 +584,7 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
         int count = 0;
         //  复制到其他机器
         for (PeerNode peer : nodes.getPeersWithOutSelf()) {
-            // TODO check self and RaftThreadPool
+            // TODO check self and CCThreadPool
             count++;
             // 并行发起 RPC 复制.
             futureList.add(replication(peer, logEntries));
@@ -704,7 +707,7 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
         int count = 0;
         //  复制到其他机器
         for (PeerNode peer : nodes.getPeersWithOutSelf()) {
-            // TODO check self and RaftThreadPool
+            // TODO check self and CCThreadPool
             count++;
 
             futureList.add(Commit(peer,logEntries));

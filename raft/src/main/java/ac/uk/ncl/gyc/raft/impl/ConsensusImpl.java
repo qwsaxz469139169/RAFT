@@ -170,8 +170,9 @@ public class ConsensusImpl implements Consensus {
                     String message = entry.getMessage();
                     if(node.received.get(message)==null){
                         node.received.put(message,1L);
+                        node.startTime.put(message,startTime);
                     }
-                    node.startTime.put(message,startTime);
+
                 }
 
                 node.getLogModule().write(entry);
