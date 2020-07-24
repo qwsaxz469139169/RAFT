@@ -1,15 +1,8 @@
-package ac.uk.ncl.gyc.raft.current;
+package ac.uk.ncl.gyc.raft.clientCur;
 
-import java.util.concurrent.Callable;
-import java.util.concurrent.Future;
-import java.util.concurrent.LinkedBlockingQueue;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
-import java.util.concurrent.ThreadFactory;
-import java.util.concurrent.ThreadPoolExecutor;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
-public class RaftThreadPool {
+public class CCThreadPool {
 
     private static int cup = Runtime.getRuntime().availableProcessors();
     private static int maxPoolSize = cup * 4;
@@ -21,7 +14,7 @@ public class RaftThreadPool {
     private static ThreadPoolExecutor te = getThreadPool();
 
     private static ThreadPoolExecutor getThreadPool() {
-        return new RaftThreadPoolExecutor(
+        return new CCThreadPoolExecutor(
                 cup,
                 maxPoolSize,
                 keepTime,
@@ -42,6 +35,9 @@ public class RaftThreadPool {
 
     public static void scheduleWithFixedDelay(Runnable r, long delay) {
         ss.scheduleWithFixedDelay(r, 0, delay, TimeUnit.MILLISECONDS);
+    }
+    public static void scheduleWithFixedDelayUs(Runnable r, long delay) {
+        ss.scheduleWithFixedDelay(r, 0, delay, TimeUnit.MICROSECONDS);
     }
 
     @SuppressWarnings("unchecked")
@@ -65,7 +61,7 @@ public class RaftThreadPool {
 
         @Override
         public Thread newThread(Runnable r) {
-            Thread t = new RaftThread("Raft thread", r);
+            Thread t = new CCThread("Raft thread", r);
             t.setDaemon(true);
             t.setPriority(5);
             return t;

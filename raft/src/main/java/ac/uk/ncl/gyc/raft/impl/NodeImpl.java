@@ -225,7 +225,7 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
             PeerNode peer = new PeerNode(s);
             nodes.addPeer(peer);
 
-            if (s.equals("localhost:" + config.getSelfPort())) {
+            if (s.equals("100.70.49.128:" + config.getSelfPort())) {
                 System.out.println("设置自身IP：" + s);
                 nodes.setSelf(peer);
             }
@@ -375,7 +375,7 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
         int count = 0;
         //  复制到其他机器
         for (PeerNode peer : nodes.getPeersWithOutSelf()) {
-            // TODO check self and RaftThreadPool
+            // TODO check self and CCThreadPool
             count++;
             // 并行发起 RPC 复制.
             futureList.add(replication(peer, logEntry));
@@ -459,7 +459,7 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
         int count = 0;
         //  复制到其他机器
         for (PeerNode peer : nodes.getPeersWithOutSelf()) {
-            // TODO check self and RaftThreadPool
+            // TODO check self and CCThreadPool
             count++;
 
             futureList.add(Commit(peer, commitList));
