@@ -13,13 +13,13 @@ public class ClientResponse implements Serializable {
 
     long followerLatency;
 
-    List<String> requests;
+    List<Message> requests;
 
-    public List<String> getRequests() {
+    public List<Message> getRequests() {
         return requests;
     }
 
-    public void setRequests(List<String> requests) {
+    public void setRequests(List<Message> requests) {
         this.requests = requests;
     }
 

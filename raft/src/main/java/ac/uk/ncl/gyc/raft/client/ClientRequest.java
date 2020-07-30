@@ -14,11 +14,20 @@ public class ClientRequest implements Serializable {
     String value;
 
     boolean isRedirect;
+    String sentAdd;
 
     private ClientRequest(Builder builder) {
         setType(builder.type);
         setKey(builder.key);
         setValue(builder.value);
+    }
+
+    public String getSentAdd() {
+        return sentAdd;
+    }
+
+    public void setSentAdd(String sentAdd) {
+        this.sentAdd = sentAdd;
     }
 
     public boolean isRedirect() {

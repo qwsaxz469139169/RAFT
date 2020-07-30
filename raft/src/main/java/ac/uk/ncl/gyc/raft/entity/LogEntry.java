@@ -17,11 +17,21 @@ public class LogEntry implements Serializable, Comparable {
 
     private String message;
 
+    private String sentAddr;
+
     private long startTime;
 
     private boolean firstIndex;
 
     public LogEntry() {
+    }
+
+    public String getSentAddr() {
+        return sentAddr;
+    }
+
+    public void setSentAddr(String sentAddr) {
+        this.sentAddr = sentAddr;
     }
 
     public boolean isFirstIndex() {

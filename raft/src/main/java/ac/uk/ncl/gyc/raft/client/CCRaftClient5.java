@@ -96,14 +96,20 @@ public class CCRaftClient5 {
                     System.out.println("message : "+obj.getKey()+ " send successful!");
                     if(clientResponse.getRequests()!=null){
                         int con = 0;
-                        for(String s :clientResponse.getRequests()){
+
+                        for(Message s :clientResponse.getRequests()){
                             receiveCount.addAndGet(1);
                             con++;
-                            System.out.println("message : "+s+ " commit!!!!!!!!!!!");
+                            if(s.getFollower_latency()==0){
+                                System.out.println("message : "+s.getMessage()+ " commit! Follower latency: "+s.getFollower_latency());
+                            }else{
+                                System.out.println("message : "+s.getMessage()+ " commit! Leader latency: "+s.getLeader_latency());
+                            }
+
+                            messages.add(s);
                         }
-                        System.out.println("Follower Latency: "+clientResponse.getFollowerLatency()+", Leader Latency: "+clientResponse.getLeaderLatency()+", extra message: "+ clientResponse.getExtraMessageCount());
-                        Message message1 = new Message(con, clientResponse.getExtraMessageCount(), clientResponse.getLeaderLatency(), clientResponse.getFollowerLatency());
-                        messages.add(message1);
+                        System.out.println("Cur commit message count: "+con+", extra message: "+ clientResponse.getExtraMessageCount());
+
                     }
 
                 }

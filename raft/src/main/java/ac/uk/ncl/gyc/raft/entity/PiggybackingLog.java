@@ -8,12 +8,21 @@ import java.io.Serializable;
 public class PiggybackingLog implements Serializable {
 
     private String message;
+    private String sentAddr;
 
     private Long startTime;
 
     private int extraMessage;
 
     private boolean firstIndex;
+
+    public String getSentAddr() {
+        return sentAddr;
+    }
+
+    public void setSentAddr(String sentAddr) {
+        this.sentAddr = sentAddr;
+    }
 
     public boolean isFirstIndex() {
         return firstIndex;

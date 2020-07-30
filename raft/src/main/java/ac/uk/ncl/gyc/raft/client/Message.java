@@ -2,15 +2,16 @@ package ac.uk.ncl.gyc.raft.client;
 
 import com.alibaba.fastjson.annotation.JSONField;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by GYC on 2020/7/5.
  */
-public class Message {
+public class Message implements Serializable{
 
     @JSONField(name = "message")
-    private int message;
+    private String message;
 
     @JSONField(name = "extra_message")
     private int extra_message;
@@ -23,7 +24,9 @@ public class Message {
 
     private List<String> messages;
 
-    public Message(int message, int extra_message, long leader_latency, long follower_latency) {
+    public Message(){}
+
+    public Message(String message, int extra_message, long leader_latency, long follower_latency) {
         this.message = message;
         this.extra_message = extra_message;
         this.leader_latency = leader_latency;
@@ -38,11 +41,11 @@ public class Message {
         this.messages = messages;
     }
 
-    public int getMessage() {
+    public String getMessage() {
         return message;
     }
 
-    public void setMessage(int message) {
+    public void setMessage(String message) {
         this.message = message;
     }
 

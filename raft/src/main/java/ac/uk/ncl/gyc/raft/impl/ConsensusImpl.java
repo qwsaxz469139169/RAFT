@@ -1,5 +1,7 @@
 package ac.uk.ncl.gyc.raft.impl;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.locks.ReentrantLock;
 
 import ac.uk.ncl.gyc.raft.Consensus;
@@ -166,14 +168,11 @@ public class ConsensusImpl implements Consensus {
             // 写进日志并且应用到状态机
             for (LogEntry entry : param.getEntries()) {
 
-                if(entry.isFirstIndex()){
                     String message = entry.getMessage();
                     if(node.received.get(message)==null){
-                        node.received.put(message,1L);
+                        node.received.put(message,entry.getSentAddr());
                         node.startTime.put(message,startTime);
                     }
-
-                }
 
                 node.getLogModule().write(entry);
                 node.stateMachine.apply(entry);
@@ -201,26 +200,39 @@ public class ConsensusImpl implements Consensus {
 
     @Override
     public CommitResponse requestCommit(CommitRequest request) {
+        CommitResponse response = new CommitResponse();
+           try{
+               commitLock.lock();
 
-            String key = request.getMessage();
+               String key = request.getMessage();
 
-//            for(LogEntry logEntry :request.getLogEntries()){
-//                System.out.println("333333333333333333333333333333");
-//                System.out.println("The Message: "+logEntry.getMessage()+ "has been committed");
-//            }
+               Map<String,Long> lMap = new HashMap<>();
+            for(Map.Entry<String,String> logEntry :request.getNewMap().entrySet()){
+               System.out.println("333333333333333333333333333333");
+               if(logEntry.getValue().equals(node.nodes.getSelf().getAdress())){
+                   long stime = node.startTime.get(logEntry.getKey());
+                   long la  = System.currentTimeMillis()-stime;
+                   lMap.put(logEntry.getKey(),la);
+                   System.out.println("The Message: "+logEntry.getKey()+ "has been committed, latency: "+la);
 
-        System.out.println("The Message: "+key+ "has been committed");
+               }
+                node.received.remove(logEntry.getKey());
+                node.startTime.remove(logEntry.getKey());
+           }
 
-            CommitResponse response = new CommitResponse();
-               long latency = System.currentTimeMillis() - node.startTime.get(key);
-        System.out.println("----------888888---------- "+System.currentTimeMillis());
-        System.out.println("----------999999---------- "+node.startTime.get(key));
-               System.out.println("----------111111----------- "+latency);
-            response.setLatency(latency);
-            response.setSuccess(true);
+//               System.out.println("The Message: "+key+ "has been committed");
 
-            node.received.remove(key);
-            node.startTime.remove(key);
+
+              // long latency = System.currentTimeMillis() - node.startTime.get(key);
+
+               response.setLatency(lMap);
+               response.setSuccess(true);
+
+
+           }finally {
+               commitLock.unlock();
+           }
+
             return  response;
 
     }
