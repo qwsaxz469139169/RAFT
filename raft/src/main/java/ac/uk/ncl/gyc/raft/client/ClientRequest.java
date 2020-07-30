@@ -15,6 +15,8 @@ public class ClientRequest implements Serializable {
 
     String value;
 
+    String sentAdd;
+
     boolean isRedirect;
 
     List<String> acks;
@@ -23,6 +25,14 @@ public class ClientRequest implements Serializable {
         setType(builder.type);
         setKey(builder.key);
         setValue(builder.value);
+    }
+
+    public String getSentAdd() {
+        return sentAdd;
+    }
+
+    public void setSentAdd(String sentAdd) {
+        this.sentAdd = sentAdd;
     }
 
     public List<String> getAcks() {

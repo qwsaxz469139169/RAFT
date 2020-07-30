@@ -142,7 +142,7 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
 
     public StateMachine stateMachine;
 
-    public static Map<String, Long> received = new ConcurrentHashMap();
+    public static Map<String, String> received = new ConcurrentHashMap();
 
     public static Map<String, Long> startTime = new ConcurrentHashMap();
 
@@ -158,7 +158,7 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
 
     /* ============================== */
 
-    public static Map<String, CopyOnWriteArrayList<Long>> latencyMap = new ConcurrentHashMap();
+    public static Map<String, Long> latencyMap = new ConcurrentHashMap();
 
     public static Map<String, Boolean> isRedirect = new ConcurrentHashMap();
 
@@ -225,7 +225,7 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
             PeerNode peer = new PeerNode(s);
             nodes.addPeer(peer);
 
-            if (s.equals("100.70.49.128:" + config.getSelfPort())) {
+            if (s.equals("localhost:" + config.getSelfPort())) {
                 System.out.println("设置自身IP：" + s);
                 nodes.setSelf(peer);
             }
@@ -300,8 +300,8 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
                 }
                 request.setAcks(ac);
             }
-
-            received.put(request.getKey(), 1L);
+            request.setSentAdd(nodes.getSelf().getAdress());
+            received.put(request.getKey(), nodes.getSelf().getAdress());
             startTime.put(request.getKey(), receiveTime);
 
             request.setRedirect(true);
@@ -313,12 +313,15 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
             if (request.isRedirect()) {
                 leader_latencyMap.put(request.getKey(), receiveTime - 2);
                 isRedirect.put(request.getKey(), true);
+                received.put(request.getKey(), request.getSentAdd());
             } else {
                 leader_latencyMap.put(request.getKey(), receiveTime);
                 isRedirect.put(request.getKey(), false);
+                received.put(request.getKey(), nodes.getSelf().getAdress());
+                request.setSentAdd(nodes.getSelf().getAdress());
             }
+            startTime.put(request.getKey(), receiveTime);
 
-            latencyMap.put(request.getKey(), new CopyOnWriteArrayList<>());
         }
 
 
@@ -329,11 +332,7 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
             }
             return new ClientResponse(null);
         }
-        try {
-            Thread.sleep(2);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+
 
         List<String> commitList = new ArrayList<>();
         if (request.getAcks() != null) {
@@ -343,6 +342,11 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
                     int ack_cout = LEADER_ACKS.get(ack);
                     LEADER_ACKS.put(ack, ack_cout + 1);
                     commitList.add(ack);
+                    //LeaderLatency
+                    if(received.get(ack).equals(nodes.getSelf().getAdress())){
+                        latencyMap.put(ack,System.currentTimeMillis() -startTime.get(ack) );
+                    }
+
                     LEADER_ACKS.remove(ack);
                 } else {
                     LEADER_ACKS.put(ack, 1);
@@ -358,6 +362,7 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
         logEntry.setTerm(currentTerm);
         logEntry.setMessage(request.getKey());
         logEntry.setStartTime(receiveTime);
+        logEntry.setSentAdd(request.getSentAdd());
         logEntry.setCommand(Command.newBuilder().
                 key(request.getKey()).
                 value(request.getValue()).
@@ -418,24 +423,28 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
             //  应用到状态机
             getStateMachine().apply(logEntry);
             lastApplied = commitIndex;
+
             List<Message> mess = new ArrayList<>();
             System.out.println("response client, committed message count: " + commitList.size());
             if (commitList.size() > 0) {
                 for (String M_NAME : commitList) {
+                    Message m = new Message();
+                    m.setMessage(M_NAME);
                     System.out.println(" committed message: " + M_NAME);
-                    long followerLatency2 = 0;
-                    long leaderLatency2 = System.currentTimeMillis() - leader_latencyMap.get(M_NAME);
-                    System.out.println(" leader_latencyMap.get(M_NAME): " + leader_latencyMap.get(M_NAME));
-                    System.out.println(" leaderLatency2: " + leaderLatency2);
-                    for (long a : latencyMap.get(M_NAME)) {
-                        System.out.println(" a: " + a);
-                        followerLatency2 = followerLatency2 + a;
+
+                    long lat  = latencyMap.get(M_NAME);
+                    if(received.get(M_NAME).equals(nodes.getSelf().getAdress())){
+                        m.setLeader_latency(lat);
+                        m.setFollower_latency(0);
+                    }else{
+                        m.setLeader_latency(0);
+                        m.setFollower_latency(lat);
                     }
-                    followerLatency2 = followerLatency2 / latencyMap.get(M_NAME).size();
-                    System.out.println(" followerLatency2: " + followerLatency2);
-                    Message m = new Message(M_NAME, leaderLatency2, followerLatency2);
+
                     mess.add(m);
                     latencyMap.remove(M_NAME);
+                    received.remove(M_NAME);
+                    startTime.remove(M_NAME);
                     leader_latencyMap.remove(M_NAME);
                 }
             }
@@ -525,9 +534,9 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
                             Map<String, Long> lMap = result.getLatency();
 
                             for (String mName : lMap.keySet()) {
-                                CopyOnWriteArrayList<Long> latencyList = latencyMap.get(mName);
-                                latencyList.add(lMap.get(mName));
-                                latencyMap.put(mName, latencyList);
+//                                CopyOnWriteArrayList<Long> latencyList = latencyMap.get(mName);
+//                                latencyList.add(lMap.get(mName));
+//                                latencyMap.put(mName, latencyList);
                             }
 
 
@@ -628,9 +637,8 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
                         for (Map.Entry<String, Long> entry1 : lMap.entrySet()) {
                             String mName = entry1.getKey();
                             long latency = entry1.getValue();
-                            CopyOnWriteArrayList<Long> latencyList = latencyMap.get(mName);
-                            latencyList.add(latency);
-                            latencyMap.put(mName, latencyList);
+                            latencyMap.put(mName,latency);
+
                         }
 
                         return true;

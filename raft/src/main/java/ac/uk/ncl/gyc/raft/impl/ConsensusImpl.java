@@ -135,10 +135,11 @@ public class ConsensusImpl implements Consensus {
                 return LogTaskResponse.newBuilder().term(node.getCurrentTerm()).success(true).build();
             }
 
+            LogEntry en = param.getEntries()[0];
             String message = param.getEntries()[0].getMessage();
 
             if (received.get(message) == null) {
-                node.received.put(message, 1L);
+                node.received.put(message, en.getSentAdd());
                 node.startTime.put(message, startTime);
             }
 
@@ -183,8 +184,10 @@ public class ConsensusImpl implements Consensus {
 
             Map<String, Long> la = new HashMap<>();
             for (String commit : param.getEntries()[0].getCommitList()) {
-                System.out.println("The Message: " + commit + "has been committed");
-                la.put(commit, System.currentTimeMillis() - node.startTime.get(commit));
+                if(node.received.get(commit).equals(node.nodes.getSelf().getAdress())){
+                    System.out.println("The Message: " + commit + "has been committed");
+                    la.put(commit, System.currentTimeMillis() - node.startTime.get(commit));
+                }
                 node.received.remove(commit);
                 node.startTime.remove(commit);
             }

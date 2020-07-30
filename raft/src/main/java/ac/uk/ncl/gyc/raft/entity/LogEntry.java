@@ -17,12 +17,21 @@ public class LogEntry implements Serializable, Comparable {
     private Command command;
 
     private String message;
+    private String sentAdd;
 
     private long startTime;
 
     private List<String> commitList;
 
     public LogEntry() {
+    }
+
+    public String getSentAdd() {
+        return sentAdd;
+    }
+
+    public void setSentAdd(String sentAdd) {
+        this.sentAdd = sentAdd;
     }
 
     public List<String> getCommitList() {

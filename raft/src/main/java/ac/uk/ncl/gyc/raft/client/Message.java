@@ -17,6 +17,9 @@ public class Message implements Serializable {
 
     @JSONField(name = "follower_latency")
     private long follower_latency;
+    public Message(){
+
+    }
 
     public Message(String message, long leader_latency, long follower_latency) {
         this.message = message;
