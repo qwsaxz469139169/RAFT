@@ -33,7 +33,7 @@ public class CCRaftClient5 {
     private static  AtomicLong count = new AtomicLong(3);
     private static  AtomicLong receiveCount = new AtomicLong(3);
     private static AtomicInteger m_index = new AtomicInteger(0);
-    static List<String> nodelist = Lists.newArrayList("100.70.49.128:8775", "100.70.49.85:8776", "100.70.49.226:8777");
+    static List<String> nodelist = Lists.newArrayList("100.70.48.36:8775", "100.70.49.21:8776", "100.70.49.86:8777");
 
     private static final int clientNum = 8;
     private static final int runtime= 620;
