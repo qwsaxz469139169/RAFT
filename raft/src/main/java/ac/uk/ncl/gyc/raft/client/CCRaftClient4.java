@@ -31,18 +31,18 @@ public class CCRaftClient4 {
     private final static RaftRpcClient client = new RaftRpcClientImpl();
     private static List<Message> messages = new CopyOnWriteArrayList<>();
     private static  AtomicLong count = new AtomicLong(3);
-    private static  AtomicLong receiveCount = new AtomicLong(3);
+    private static  AtomicLong receiveCount = new AtomicLong(0);
     private static AtomicInteger m_index = new AtomicInteger(0);
     static List<String> nodelist = Lists.newArrayList("100.70.48.36:8775", "100.70.49.21:8776", "100.70.49.86:8777");
     //static List<String> nodelist = Lists.newArrayList("localhost:8775", "localhost:8776", "localhost:8777");
 
-    private static final int clientNum = 9;
+    private static final int clientNum = 3;
     private static final int runtime= 620;
     private static final int c = 2;
-    private static final int delay= 200;
-    private static final int endcount= 50;
+    private static final int delay= 67;
+    private static final int endcount= 9000;
     private static final int arriveRate = 15;
-    private static final String arriveRateNum = "test";
+    private static final String arriveRateNum = "0.075";
 
 
     public static void main(String[] args) throws RemotingException, InterruptedException {
@@ -66,7 +66,7 @@ public class CCRaftClient4 {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-                System.out.println("end messages.size():" +messages.size());
+                System.out.println("end messages.size():" +messages.size()+", bunching: "+receiveCount.get());
                 System.exit(0);
             }
         }
@@ -99,7 +99,7 @@ public class CCRaftClient4 {
                         int con = 0;
 
                         for(Message s :clientResponse.getRequests()){
-                            receiveCount.addAndGet(1);
+
                             con++;
                             if(s.getFollower_latency()==0){
                                 System.out.println("message : "+s.getMessage()+ " commit! Leader latency: "+s.getLeader_latency());
@@ -109,6 +109,7 @@ public class CCRaftClient4 {
 
                             messages.add(s);
                         }
+                        receiveCount.addAndGet(con);
                         System.out.println("Cur commit message count: "+con+", extra message: "+ clientResponse.getExtraMessageCount());
                     }
 
