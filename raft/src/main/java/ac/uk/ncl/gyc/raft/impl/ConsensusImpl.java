@@ -134,6 +134,7 @@ public class ConsensusImpl implements Consensus {
             if(node.received.get(message)==null){
                 node.received.put(message,1L);
                 node.startTime.put(message,startTime);
+                node.sentAdd.put(message,param.getEntries()[0].getSentAdd());
             }
             // 真实日志
             // 第一次
@@ -201,6 +202,7 @@ public class ConsensusImpl implements Consensus {
 
             node.received.remove(key);
             node.startTime.remove(key);
+            node.sentAdd.remove(key);
             return  response;
 
     }

@@ -13,12 +13,22 @@ public class ClientRequest implements Serializable {
 
     String value;
 
+    String sentAdd;
+
     boolean isRedirect;
 
     private ClientRequest(Builder builder) {
         setType(builder.type);
         setKey(builder.key);
         setValue(builder.value);
+    }
+
+    public String getSentAdd() {
+        return sentAdd;
+    }
+
+    public void setSentAdd(String sentAdd) {
+        this.sentAdd = sentAdd;
     }
 
     public boolean isRedirect() {
@@ -52,6 +62,8 @@ public class ClientRequest implements Serializable {
     public void setValue(String value) {
         this.value = value;
     }
+
+
 
     public static Builder newBuilder() {
         return new Builder();

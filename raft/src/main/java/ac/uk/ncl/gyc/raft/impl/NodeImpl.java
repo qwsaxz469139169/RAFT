@@ -126,6 +126,8 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
 
     public static Map<String,Long> startTime = new ConcurrentHashMap();
 
+    public static Map<String,String> sentAdd = new ConcurrentHashMap();
+
     /* ============================== */
 
     /** 一致性模块实现 */
@@ -135,9 +137,8 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
 
 
     /* ============================== */
-    public static Map<String,AtomicInteger> extraM = new ConcurrentHashMap();
 
-    public static Map<String,CopyOnWriteArrayList<Long>> latencyMap= new ConcurrentHashMap();
+    public static Map<String,Long> latencyMap= new ConcurrentHashMap();
 
     private NodeImpl() {
     }
@@ -195,7 +196,7 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
             PeerNode peer = new PeerNode(s);
             nodes.addPeer(peer);
             
-            if (s.equals("100.70.49.85:" + config.getSelfPort())) {
+            if (s.equals("100.70.49.82:" + config.getSelfPort())) {
                 System.out.println("设置自身IP：" +s);
                 nodes.setSelf(peer);
             }
@@ -256,18 +257,23 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
             request.setRedirect(true);
             received.put(request.getKey(),1L);
             startTime.put(request.getKey(),receiveTime);
+            sentAdd.put(request.getKey(),nodes.getSelf().getAdress());
+
+            request.setSentAdd(nodes.getSelf().getAdress());
             return redirect(request);
         }
 
         //record extra messages
-        if(status == LEADER && extraM.get(request.getKey())==null){
+        if(status == LEADER ){
             if(request.isRedirect()){
-                extraM.put(request.getKey(),new AtomicInteger(1));
+                received.put(request.getKey(),1L);
+                sentAdd.put(request.getKey(),request.getSentAdd());
             }else {
-                extraM.put(request.getKey(),new AtomicInteger(0));
+                received.put(request.getKey(),1L);
+                request.setSentAdd(nodes.getSelf().getAdress());
+                sentAdd.put(request.getKey(),nodes.getSelf().getAdress());
             }
 
-            latencyMap.put(request.getKey(),new CopyOnWriteArrayList<>());
         }
 
 
@@ -287,6 +293,7 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
                 key(request.getKey()).
                 value(request.getValue()).
                 build());
+        logEntry.setSentAdd(request.getSentAdd());
 
         // 预提交到本地日志, TODO 预提交
         logModule.write(logEntry);
@@ -343,7 +350,7 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
 
         //  响应客户端(成功一半)
         if (success.get() >= count) {
-            long latency = System.currentTimeMillis() - logEntry.getStartTime();
+            long latency = System.currentTimeMillis() - startTime.get(request.getKey());
             boolean reqCommit = ReqCommit(logEntry);
 
             if(reqCommit==true){
@@ -358,12 +365,12 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
 
                 long followerLatency = 0;
 
-                for(long a :latencyMap.get(request.getKey())){
-                    followerLatency = followerLatency+a;
+                if(latencyMap.get(request.getKey())!=null){
+                    followerLatency = latencyMap.get(request.getKey());
+                    latencyMap.remove(request.getKey());
+                    latency = 0;
+
                 }
-                followerLatency = followerLatency/latencyMap.get(request.getKey()).size();
-                // 返回成功.
-                AtomicInteger extraMCount = extraM.get(request.getKey());
 
                 ClientResponse clientResponse = new ClientResponse();
 
@@ -377,7 +384,6 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
                 clientResponse.setFollowerLatency(followerLatency);
                 clientResponse.setResult("ok");
 
-                extraM.remove(request.getKey());
 
                 return clientResponse;
             }else{
@@ -454,9 +460,6 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
                             .url(peer.getAdress())
                             .build();
 
-                    AtomicInteger extraMCount = extraM.get(key);
-                    extraMCount.incrementAndGet();
-                    extraM.put(key,extraMCount);
 
                     try {
                         Response response = getRaftRpcClient().send(request);
@@ -468,10 +471,9 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
                         if (result != null && result.isSuccess()) {
                             LOGGER.info("commit success , follower=[{}], entry=[{}]", peer, key);
 
-                            CopyOnWriteArrayList<Long> latencyList = latencyMap.get(key);
-                            latencyList.add(result.getLatency());
-                            latencyMap.put(key,latencyList);
-
+                            if(peer.getAdress().equals(logEntry.getSentAdd())){
+                                latencyMap.put(key,result.getLatency());
+                            }
                             return true;
                         }
 
@@ -548,9 +550,6 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
                             .url(peer.getAdress())
                             .build();
 
-                    AtomicInteger extraMCount = extraM.get(entry.getCommand().getKey());
-                    extraMCount.incrementAndGet();
-                    extraM.put(entry.getCommand().getKey(),extraMCount);
 
 
                     try {
@@ -564,9 +563,7 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
                             // update 这两个追踪值
                             nextIndexs.put(peer, entry.getIndex() + 1);
                             matchIndexs.put(peer, entry.getIndex());
-                            AtomicInteger mm = extraM.get(entry.getCommand().getKey());
-                            mm.incrementAndGet();
-                            extraM.put(entry.getCommand().getKey(),mm);
+
                             return true;
                         } else if (result != null) {
                             // 对方比我大
