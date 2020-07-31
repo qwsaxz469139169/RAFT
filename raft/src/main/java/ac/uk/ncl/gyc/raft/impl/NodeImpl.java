@@ -196,7 +196,7 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
             PeerNode peer = new PeerNode(s);
             nodes.addPeer(peer);
             
-            if (s.equals("100.70.49.82:" + config.getSelfPort())) {
+            if (s.equals("100.70.49.21:" + config.getSelfPort())) {
                 System.out.println("设置自身IP：" +s);
                 nodes.setSelf(peer);
             }
