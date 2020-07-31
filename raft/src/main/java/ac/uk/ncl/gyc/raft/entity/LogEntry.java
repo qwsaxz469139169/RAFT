@@ -18,7 +18,6 @@ public class LogEntry implements Serializable, Comparable {
     private String sentAdd;
 
     private String message;
-    private String sentAdd;
 
     private long startTime;
 

@@ -16,7 +16,7 @@ public class ClientRequest implements Serializable {
     String sentAdd;
 
     boolean isRedirect;
-    String sentAdd;
+
 
 
     private ClientRequest(Builder builder) {
