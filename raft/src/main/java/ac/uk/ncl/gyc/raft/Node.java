@@ -39,10 +39,10 @@ public interface Node<T> extends LifeCycle{
     /**
      * 处理客户端请求.
      *
-     * @param request
+
      * @return
      */
-    ClientResponse handlerClientRequest( ClientRequest request,long receiveTime);
+    ClientResponse handlerClientRequest(List<PiggybackingLog> listP,long receiveTime);
 
     /**
      * 转发给 leader 节点.

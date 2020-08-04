@@ -66,7 +66,7 @@ public class RaftRpcServerImpl implements RaftRpcServer {
         } else if (request.getCmd() == Request.REQ_LOG) {
             return new Response(node.handlerAppendEntries((LogTaskRequest) request.getObj()));
         } else if (request.getCmd() == Request.REQ_CLIENT) {
-            return new Response(node.handlerClientRequest((ClientRequest) request.getObj(),receiveTime));
+            return new Response(node.piggyBackingClientRequest((ClientRequest) request.getObj(),receiveTime));
         } else if (request.getCmd() == Request.CHANGE_CONFIG_REMOVE) {
             return new Response(((ClusterMembershipChanges) node).removeNode((PeerNode) request.getObj()));
         } else if (request.getCmd() == Request.CHANGE_CONFIG_ADD) {
