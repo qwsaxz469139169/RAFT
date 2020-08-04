@@ -339,16 +339,13 @@ public class NodeImpl<T> implements Node<T>, LifeCycle, ClusterMembershipChanges
             System.out.println("cur receive ack count: " + request.getAcks().size());
             for (String ack : request.getAcks()) {
                 if (LEADER_ACKS.get(ack) != null) {
-                    int ack_cout = LEADER_ACKS.get(ack);
-                    LEADER_ACKS.put(ack, ack_cout + 1);
-                    commitList.add(ack);
                     //LeaderLatency
+                    LEADER_ACKS.remove(ack);
+                } else {
                     if(received.get(ack).equals(nodes.getSelf().getAdress())){
                         latencyMap.put(ack,System.currentTimeMillis() -startTime.get(ack) );
                     }
-
-                    LEADER_ACKS.remove(ack);
-                } else {
+                    commitList.add(ack);
                     LEADER_ACKS.put(ack, 1);
                 }
             }
